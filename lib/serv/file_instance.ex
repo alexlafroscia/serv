@@ -9,6 +9,8 @@ defmodule Serv.FileInstance do
   @enforce_keys [:name, :hash, :extension]
   defstruct [:name, :hash, :extension]
 
+  @directory Application.get_env(:serv, :data_path)
+
   @doc """
   Generate a new file instance
 
@@ -43,11 +45,16 @@ defmodule Serv.FileInstance do
     end
   end
 
+  def set_content(instance, content) do
+    path = location_for(instance)
+
+    File.write(path, content)
+  end
+
   defp location_for(instance) do
-    file_directory = Application.get_env(:serv, :data_path)
     file_name = Enum.join([instance.hash, instance.extension], ".")
 
-    file_directory
+    @directory
     |> Path.join(instance.name)
     |> Path.join(file_name)
   end

@@ -1,5 +1,3 @@
-require Logger
-
 defmodule Serv.File do
   @moduledoc """
   Representation of a file
@@ -12,6 +10,8 @@ defmodule Serv.File do
 
   @enforce_keys [:name]
   defstruct name: nil
+
+  @directory Application.get_env(:serv, :data_path)
 
   @doc """
   Retrieve a list of instances of a file
@@ -26,8 +26,6 @@ defmodule Serv.File do
   end
 
   defp location_for(file) do
-    file_directory = Application.get_env(:serv, :data_path)
-
-    Path.join(file_directory, file.name)
+    Path.join(@directory, file.name)
   end
 end
