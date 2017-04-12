@@ -8,7 +8,7 @@ defmodule Serv.File do
   file. Each instance represents a version of this particular file
   """
 
-  @alias Serv.FileInstance
+  alias Serv.FileInstance, as: FileInstance
 
   @enforce_keys [:name]
   defstruct name: nil
