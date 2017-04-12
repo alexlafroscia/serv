@@ -1,0 +1,11 @@
+image: elixir:1.4.2
+
+before_script:
+  - mix local.hex --force
+  - mix deps.get
+
+lint:
+  script: mix credo --strict
+
+test:
+  script: mix test
