@@ -1,4 +1,11 @@
 defmodule Serv.FileInstance do
+  @moduledoc """
+  Representation of a file instance
+
+  A file instance is a particular version of a file, identified by a hash of the
+  contents
+  """
+
   @enforce_keys [:name, :hash, :extension]
   defstruct [:name, :hash, :extension]
 
@@ -24,7 +31,8 @@ defmodule Serv.FileInstance do
     file_directory = Application.get_env(:serv, :data_path)
     file_name = Enum.join([instance.hash, instance.extension], ".")
 
-    Path.join(file_directory, instance.name)
+    file_directory
+    |> Path.join(instance.name)
     |> Path.join(file_name)
   end
 end

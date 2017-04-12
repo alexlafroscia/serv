@@ -1,6 +1,15 @@
 require Logger
 
 defmodule Serv.File do
+  @moduledoc """
+  Representation of a file
+
+  A file represents a group of file instances, representing the same "logical"
+  file. Each instance represents a version of this particular file
+  """
+
+  @alias Serv.FileInstance
+
   @enforce_keys [:name]
   defstruct name: nil
 
@@ -12,7 +21,7 @@ defmodule Serv.File do
 
     case File.ls(location) do
       {:ok, instances} -> instances
-        |> Enum.map(fn(instance) -> Serv.FileInstance.new(file, instance) end)
+        |> Enum.map(fn(instance) -> FileInstance.new(file, instance) end)
     end
   end
 
