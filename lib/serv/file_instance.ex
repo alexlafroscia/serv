@@ -9,6 +9,19 @@ defmodule Serv.FileInstance do
   @enforce_keys [:name, :hash, :extension]
   defstruct [:name, :hash, :extension]
 
+  @doc """
+  Generate a new file instance
+
+  ## Examples
+
+    iex> Serv.FileInstance.new(%Serv.File{name: "fixture-a"}, "abc.txt")
+    %Serv.FileInstance{
+      name: "fixture-a",
+      hash: "abc",
+      extension: "txt"
+    }
+
+  """
   def new(file, instance_file) do
     [hash, extension] = String.split(instance_file, ".")
 
@@ -19,7 +32,10 @@ defmodule Serv.FileInstance do
     }
   end
 
-  def content(instance) do
+  @doc """
+  Get the contents of a file instance
+  """
+  def get_content(instance) do
     path = location_for(instance)
 
     case File.read(path) do

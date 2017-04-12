@@ -23,7 +23,7 @@ defmodule ServFileInstanceTest do
     }
 
     content = instance
-      |> Serv.FileInstance.content
+    |> Serv.FileInstance.get_content
 
     assert content === "file content\n"
   end
