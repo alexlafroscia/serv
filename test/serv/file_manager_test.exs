@@ -22,7 +22,9 @@ defmodule ServFileManagerTest do
       hash: "D10B4C3FF123B26DC068D43A8BEF2D23"
     }
 
-    written_content = TestHelpers.read_file("fixture-a.txt/D10B4C3FF123B26DC068D43A8BEF2D23/fixture-a.txt")
+    written_content = TestHelpers.read_file(
+      "fixture-a.txt/D10B4C3FF123B26DC068D43A8BEF2D23/fixture-a.txt"
+    )
     assert written_content == file_content
 
     TestHelpers.reset_fixtures()
@@ -30,7 +32,10 @@ defmodule ServFileManagerTest do
 
   test "creating a new file" do
     file_content = "file content"
-    instance = Serv.FileManager.create_instance("some-new-file.txt", file_content)
+    instance = Serv.FileManager.create_instance(
+      "some-new-file.txt",
+      file_content
+    )
 
     assert instance == %Serv.FileInstance{
       file: %Serv.File{
@@ -40,7 +45,9 @@ defmodule ServFileManagerTest do
       hash: "D10B4C3FF123B26DC068D43A8BEF2D23"
     }
 
-    written_content = TestHelpers.read_file("some-new-file.txt/D10B4C3FF123B26DC068D43A8BEF2D23/some-new-file.txt")
+    written_content = TestHelpers.read_file(
+      "some-new-file.txt/D10B4C3FF123B26DC068D43A8BEF2D23/some-new-file.txt"
+    )
     assert written_content == file_content
 
     TestHelpers.reset_fixtures()

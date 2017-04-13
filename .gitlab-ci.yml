@@ -5,7 +5,7 @@ before_script:
   - mix deps.get
 
 lint:
-  script: mix credo --strict
+  script: mix dogma
 
 test:
   script: mix test

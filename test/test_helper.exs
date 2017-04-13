@@ -1,7 +1,7 @@
 ExUnit.start()
 
 defmodule TestHelpers do
-  def reset_fixtures() do
+  def reset_fixtures do
     tmp = temp_dir()
     fixture_directory = Path.join(System.cwd(), "test/__fixtures__")
 
@@ -14,7 +14,7 @@ defmodule TestHelpers do
     File.read!(full_path)
   end
 
-  def temp_dir() do
+  def temp_dir do
     Application.get_env(:serv, :data_path)
   end
 end

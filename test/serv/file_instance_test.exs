@@ -20,7 +20,9 @@ defmodule ServFileInstanceTest do
     assert instance.file === file
     assert instance.hash === "90C55A38064627DCA337DFA5FC5BE120"
 
-    written_content = TestHelpers.read_file("fixture-a.txt/90C55A38064627DCA337DFA5FC5BE120/fixture-a.txt")
+    written_content = TestHelpers.read_file(
+      "fixture-a.txt/90C55A38064627DCA337DFA5FC5BE120/fixture-a.txt"
+    )
     assert written_content === content
   end
 end
