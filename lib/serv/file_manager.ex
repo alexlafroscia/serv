@@ -1,3 +1,5 @@
+require Logger
+
 defmodule Serv.FileManager do
   @moduledoc """
   File Management Module
@@ -51,7 +53,7 @@ defmodule Serv.FileManager do
 
   Given a file name and content, create a new file instance
   """
-  def create_instance(file_name, file_content) do
+  def create_instance(file_name, file_content) when is_binary(file_name) do
     [name, ext] = parse_filename(file_name)
 
     file =
@@ -61,20 +63,11 @@ defmodule Serv.FileManager do
         found_file -> found_file
       end
 
-    hash = calculate_hash(file_content)
-    instance_name = Enum.join([hash, ext], ".")
-
-    instance = FileInstance.new(file, instance_name)
-
-    case FileInstance.set_content(instance, file_content) do
-      :ok -> instance
-      {:error, error} -> error
-    end
+    create_instance(file, file_content)
   end
 
-  defp calculate_hash(content) do
-    hash = :crypto.hash(:md5, content)
-    Base.encode16(hash)
+  def create_instance(file, file_content) do
+    FileInstance.create(file, file_content)
   end
 
   defp parse_filename(path) do

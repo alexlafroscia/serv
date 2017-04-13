@@ -22,7 +22,7 @@ defmodule ServFileManagerTest do
       hash: "D10B4C3FF123B26DC068D43A8BEF2D23"
     }
 
-    written_content = TestHelpers.read_file("fixture-a.txt/D10B4C3FF123B26DC068D43A8BEF2D23.txt")
+    written_content = TestHelpers.read_file("fixture-a.txt/D10B4C3FF123B26DC068D43A8BEF2D23/fixture-a.txt")
     assert written_content == file_content
 
     TestHelpers.reset_fixtures()
@@ -40,7 +40,7 @@ defmodule ServFileManagerTest do
       hash: "D10B4C3FF123B26DC068D43A8BEF2D23"
     }
 
-    written_content = TestHelpers.read_file("some-new-file.txt/D10B4C3FF123B26DC068D43A8BEF2D23.txt")
+    written_content = TestHelpers.read_file("some-new-file.txt/D10B4C3FF123B26DC068D43A8BEF2D23/some-new-file.txt")
     assert written_content == file_content
 
     TestHelpers.reset_fixtures()
