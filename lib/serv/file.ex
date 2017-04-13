@@ -16,7 +16,7 @@ defmodule Serv.File do
   @doc """
   Retrieve a list of instances of a file
   """
-  def instances(file) do
+  def get_instances(file) do
     location = location_for(file)
 
     case File.ls(location) do
