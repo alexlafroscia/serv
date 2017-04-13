@@ -2,10 +2,11 @@ image: elixir:1.4.2
 
 before_script:
   - mix local.hex --force
+  - mix local.rebar --force
   - mix deps.get
 
 lint:
   script: mix dogma
 
-test:
-  script: mix test
+coverage:
+  script: mix coveralls
