@@ -7,7 +7,7 @@ defmodule Serv.FileManager do
 
   alias Serv.FileInstance
 
-  @directory Application.get_env(:serv, :data_path)
+  @directory Application.get_env(:file_manager, :data_path)
 
   @doc """
   Returns a list of available file objects
