@@ -29,15 +29,12 @@ defmodule ServFileInstanceTest do
   end
 
   test "setting the contents of a file instance", state do
-    fixture_dir = Application.get_env(:serv, :data_path)
     content = "dummy content"
 
     # Set the content of the file instance
     :ok = Serv.FileInstance.set_content(state[:fixture_a], content)
 
-    # Read the content of the new file
-    {:ok, written_content} = File.read(Path.join(fixture_dir, "fixture-a/abc.txt"))
-
+    written_content = TestHelpers.read_file("fixture-a/abc.txt")
     assert content === written_content
 
     # Reset the fixtures

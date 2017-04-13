@@ -47,6 +47,12 @@ defmodule Serv.FileInstance do
 
   def set_content(instance, content) do
     path = location_for(instance)
+    directory = Path.dirname(path)
+
+    case File.mkdir_p(directory) do
+      :ok -> File.write(path, content)
+      {:error, reason} -> {:error, reason}
+    end
 
     File.write(path, content)
   end
