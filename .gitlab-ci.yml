@@ -9,4 +9,4 @@ lint:
   script: mix dogma
 
 coverage:
-  script: mix coveralls
+  script: mix coveralls --umbrella

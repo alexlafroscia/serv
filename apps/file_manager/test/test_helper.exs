@@ -15,7 +15,7 @@ defmodule TestHelpers do
   end
 
   def temp_dir do
-    Application.get_env(:serv, :data_path)
+    Application.get_env(:file_manager, :data_path)
   end
 end
 

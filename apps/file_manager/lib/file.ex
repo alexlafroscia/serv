@@ -11,7 +11,7 @@ defmodule Serv.File do
   @enforce_keys [:name, :extension]
   defstruct [:name, :extension]
 
-  @directory Application.get_env(:serv, :data_path)
+  @directory Application.get_env(:file_manager, :data_path)
 
   @doc """
   Retrieve a list of instances of a file
