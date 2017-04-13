@@ -14,7 +14,7 @@ defmodule TestHelpers do
     File.read!(full_path)
   end
 
-  defp temp_dir() do
+  def temp_dir() do
     Application.get_env(:serv, :data_path)
   end
 end

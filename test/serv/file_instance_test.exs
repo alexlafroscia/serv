@@ -4,9 +4,11 @@ defmodule ServFileInstanceTest do
 
   setup_all do
     fixture_a = %Serv.FileInstance{
-      name: "fixture-a",
-      hash: "abc",
-      extension: "txt"
+      file: %Serv.File{
+        name: "fixture-a",
+        extension: "txt"
+      },
+      hash: "abc"
     }
 
     {:ok, fixture_a: fixture_a}
@@ -25,7 +27,7 @@ defmodule ServFileInstanceTest do
     # Set the content of the file instance
     :ok = Serv.FileInstance.set_content(context[:fixture_a], content)
 
-    written_content = TestHelpers.read_file("fixture-a/abc.txt")
+    written_content = TestHelpers.read_file("fixture-a.txt/abc.txt")
     assert content === written_content
 
     # Reset the fixtures

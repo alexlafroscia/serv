@@ -1,3 +1,5 @@
+require Logger
+
 defmodule Serv.FileInstance do
   @moduledoc """
   Representation of a file instance
@@ -6,31 +8,31 @@ defmodule Serv.FileInstance do
   contents
   """
 
-  @enforce_keys [:name, :hash, :extension]
-  defstruct [:name, :hash, :extension]
-
-  @directory Application.get_env(:serv, :data_path)
+  @enforce_keys [:file, :hash]
+  defstruct [:file, :hash]
 
   @doc """
   Generate a new file instance
 
   ## Examples
 
-    iex> Serv.FileInstance.new(%Serv.File{name: "fixture-a"}, "abc.txt")
+    iex> file = %Serv.File{name: "fixture-a", extension: "txt"}
+    iex> Serv.FileInstance.new(file, "abc.txt")
     %Serv.FileInstance{
-      name: "fixture-a",
-      hash: "abc",
-      extension: "txt"
+      file: %Serv.File{
+        name: "fixture-a",
+        extension: "txt"
+      },
+      hash: "abc"
     }
 
   """
   def new(file, instance_file) do
-    [hash, extension] = String.split(instance_file, ".")
+    [hash, _] = String.split(instance_file, ".")
 
     %Serv.FileInstance{
-      name: file.name,
+      file: file,
       hash: hash,
-      extension: extension
     }
   end
 
@@ -58,10 +60,9 @@ defmodule Serv.FileInstance do
   end
 
   defp location_for(instance) do
-    file_name = Enum.join([instance.hash, instance.extension], ".")
+    file_name = Enum.join([instance.hash, instance.file.extension], ".")
+    file_store = instance.file |> Serv.File.storage_directory
 
-    @directory
-    |> Path.join(instance.name)
-    |> Path.join(file_name)
+    Path.join(file_store, file_name)
   end
 end

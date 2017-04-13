@@ -6,7 +6,7 @@ defmodule ServFileManagerTest do
     files = Serv.FileManager.list
 
     assert files == [
-      %Serv.File{name: "fixture-a"}
+      %Serv.File{name: "fixture-a", extension: "txt"}
     ]
   end
 
@@ -15,12 +15,14 @@ defmodule ServFileManagerTest do
     instance = Serv.FileManager.create_instance("fixture-a.txt", file_content)
 
     assert instance == %Serv.FileInstance{
-      name: "fixture-a",
-      hash: "D10B4C3FF123B26DC068D43A8BEF2D23",
-      extension: "txt"
+      file: %Serv.File{
+        name: "fixture-a",
+        extension: "txt"
+      },
+      hash: "D10B4C3FF123B26DC068D43A8BEF2D23"
     }
 
-    written_content = TestHelpers.read_file("fixture-a/D10B4C3FF123B26DC068D43A8BEF2D23.txt")
+    written_content = TestHelpers.read_file("fixture-a.txt/D10B4C3FF123B26DC068D43A8BEF2D23.txt")
     assert written_content == file_content
 
     TestHelpers.reset_fixtures()
@@ -31,12 +33,14 @@ defmodule ServFileManagerTest do
     instance = Serv.FileManager.create_instance("some-new-file.txt", file_content)
 
     assert instance == %Serv.FileInstance{
-      name: "some-new-file",
-      hash: "D10B4C3FF123B26DC068D43A8BEF2D23",
-      extension: "txt"
+      file: %Serv.File{
+        name: "some-new-file",
+        extension: "txt"
+      },
+      hash: "D10B4C3FF123B26DC068D43A8BEF2D23"
     }
 
-    written_content = TestHelpers.read_file("some-new-file/D10B4C3FF123B26DC068D43A8BEF2D23.txt")
+    written_content = TestHelpers.read_file("some-new-file.txt/D10B4C3FF123B26DC068D43A8BEF2D23.txt")
     assert written_content == file_content
 
     TestHelpers.reset_fixtures()

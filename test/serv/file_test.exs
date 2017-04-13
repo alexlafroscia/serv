@@ -2,20 +2,30 @@ defmodule ServFileTest do
   use ExUnit.Case
   doctest Serv.File
 
-  test "requires a file name to be provided" do
-    %Serv.File{name: nil}
-  end
-
   test "retrieving the instances of a file" do
-    instances = %Serv.File{name: "fixture-a"}
-                |> Serv.File.get_instances
+    file = %Serv.File{
+      name: "fixture-a",
+      extension: "txt"
+    }
 
-    assert instances == [
+    assert Serv.File.get_instances(file) == [
       %Serv.FileInstance{
-        name: "fixture-a",
-        hash: "abc",
-        extension: "txt"
+        file: file,
+        hash: "abc"
       }
     ]
+  end
+
+  test "getting the storage for a file" do
+    file = %Serv.File{
+      name: "fixture-a",
+      extension: "txt"
+    }
+
+    directory = Serv.File.storage_directory file
+    correct_path = Path.join(TestHelpers.temp_dir, "fixture-a.txt")
+
+    assert directory === correct_path
+    assert File.dir?(directory)
   end
 end

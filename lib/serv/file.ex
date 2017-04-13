@@ -8,8 +8,8 @@ defmodule Serv.File do
 
   alias Serv.FileInstance, as: FileInstance
 
-  @enforce_keys [:name]
-  defstruct name: nil
+  @enforce_keys [:name, :extension]
+  defstruct [:name, :extension]
 
   @directory Application.get_env(:serv, :data_path)
 
@@ -17,7 +17,7 @@ defmodule Serv.File do
   Retrieve a list of instances of a file
   """
   def get_instances(file) do
-    location = location_for(file)
+    location = storage_directory(file)
 
     case File.ls(location) do
       {:ok, instances} -> instances
@@ -25,7 +25,11 @@ defmodule Serv.File do
     end
   end
 
-  defp location_for(file) do
-    Path.join(@directory, file.name)
+  @doc """
+  Get the storage directory for a file
+  """
+  def storage_directory(file) do
+    file_directory = [file.name, file.extension] |> Enum.join(".")
+    Path.join(@directory, file_directory)
   end
 end
