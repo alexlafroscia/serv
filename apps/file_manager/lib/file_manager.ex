@@ -16,7 +16,7 @@ defmodule Serv.FileManager do
     case File.ls(@directory) do
       {:ok, files} -> files
         |> Enum.map(fn(name) ->
-          [name, ext] = parse_filename(name)
+          {name, ext} = parse_filename(name)
           %Serv.File{name: name, extension: ext}
         end)
     end
@@ -42,7 +42,7 @@ defmodule Serv.FileManager do
 
     case File.dir?(full_path) do
       true ->
-        [name, ext] = parse_filename(name)
+        {name, ext} = parse_filename(name)
         %Serv.File{name: name, extension: ext}
       false -> nil
     end
@@ -54,7 +54,7 @@ defmodule Serv.FileManager do
   Given a file name and content, create a new file instance
   """
   def create_instance(file_name, file_content) when is_binary(file_name) do
-    [name, ext] = parse_filename(file_name)
+    {name, ext} = parse_filename(file_name)
 
     file =
       case get_file(file_name) do
@@ -71,6 +71,9 @@ defmodule Serv.FileManager do
   end
 
   defp parse_filename(path) do
-    String.split(path, ".")
+    ext = Path.extname(path)
+    basename = Path.basename(path, ext)
+
+    {basename, String.slice(ext, 1..-1)}
   end
 end

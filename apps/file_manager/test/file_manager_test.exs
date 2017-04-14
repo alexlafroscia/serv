@@ -12,7 +12,8 @@ defmodule ServFileManagerTest do
     files = Serv.FileManager.list
 
     assert files == [
-      %Serv.File{name: "fixture-a", extension: "txt"}
+      %Serv.File{name: "fixture-a", extension: "txt"},
+      %Serv.File{name: "fixture-b.min", extension: "js"}
     ]
   end
 
