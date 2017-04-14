@@ -1,4 +1,5 @@
 defmodule Serv.WebServer.Endpoint do
+  @moduledoc false
   use Phoenix.Endpoint, otp_app: :web_server
 
   socket "/socket", Serv.WebServer.UserSocket

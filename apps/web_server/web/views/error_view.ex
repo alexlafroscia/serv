@@ -1,4 +1,5 @@
 defmodule Serv.WebServer.ErrorView do
+  @moduledoc false
   use Serv.WebServer.Web, :view
 
   def render("404.html", _assigns) do
