@@ -39,10 +39,10 @@ defmodule Serv.WebServer.FileControllerTest do
 
   test "lists all entries on index", %{conn: conn} do
     conn = get conn, file_path(conn, :index)
-    assert json_response(conn, 200)["data"] == [
-      @fixture_a,
-      @fixture_b
-    ]
+    data = json_response(conn, 200)["data"]
+
+    assert Enum.member?(data, @fixture_a)
+    assert Enum.member?(data, @fixture_b)
   end
 
   test "shows chosen resource", %{conn: conn} do

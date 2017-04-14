@@ -11,10 +11,8 @@ defmodule ServFileManagerTest do
   test "listing the available files" do
     files = Serv.FileManager.list
 
-    assert files == [
-      %Serv.File{name: "fixture-a", extension: "txt"},
-      %Serv.File{name: "fixture-b.min", extension: "js"}
-    ]
+    assert Enum.member?(files, %Serv.File{name: "fixture-a", extension: "txt"})
+    assert Enum.member?(files, %Serv.File{name: "fixture-b.min", extension: "js"})
   end
 
   test "creating a new instance of an existing file, with a file name" do
