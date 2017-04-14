@@ -23,19 +23,24 @@ defmodule Serv.WebServer.FileController do
     end
   end
 
-  # def create(conn, %{"file" => file_params}) do
-  #   changeset = File.changeset(%File{}, file_params)
+  def file_content(conn, %{"file_name" => file_name}) do
+    case Serv.FileManager.get_file(file_name) do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> text("")
+      file ->
+        conn
+        |> render_content(file)
+    end
+  end
 
-  #   case Repo.insert(changeset) do
-  #     {:ok, file} ->
-  #       conn
-  #       |> put_status(:created)
-  #       |> put_resp_header("location", file_path(conn, :show, file))
-  #       |> render("show.json", file: file)
-  #     {:error, changeset} ->
-  #       conn
-  #       |> put_status(:unprocessable_entity)
-  #       |> render(Serv.WebServer.ChangesetView, "error.json", changeset: changeset)
-  #   end
-  # end
+  defp render_content(conn, file) do
+    content = file
+              |> Serv.File.get_instances
+              |> Enum.at(0)
+              |> Serv.FileInstance.get_content
+
+    text(conn, content)
+  end
 end

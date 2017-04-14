@@ -1,5 +1,3 @@
-require Logger
-
 defmodule Serv.FileManager do
   @moduledoc """
   File Management Module

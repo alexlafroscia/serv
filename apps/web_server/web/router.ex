@@ -6,6 +6,15 @@ defmodule Serv.WebServer.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :assets do
+  end
+
+  scope "/assets", Serv.WebServer do
+    pipe_through :assets
+
+    get "/:file_name", AssetController, :show
+  end
+
   scope "/api", Serv.WebServer do
     pipe_through :api
 
