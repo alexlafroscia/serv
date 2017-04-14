@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>cover/Elixir.Serv.WebServer.Router.Helpers.html</title>
+</head><body style='background-color: white; color: black'>
+<pre>
+File generated from /Users/alexlafroscia/Code/elixir/serv/apps/web_server/web/router.ex by COVER 2017-04-13 at 23:49:46
+
+****************************************************************************
+
+<font color=red>     0..|  defmodule Serv.WebServer.Router do</font>
+        |    @moduledoc false
+        |    use Serv.WebServer.Web, :router
+        |  
+        |    pipeline :api do
+        |      plug :accepts, ["json"]
+        |    end
+        |  
+        |    scope "/api", Serv.WebServer do
+        |      pipe_through :api
+        |  
+        |      get "/files", FileController, :index
+        |      get "/files/:file_name", FileController, :show
+        |    end
+        |  end
+</pre>
+</body>
+</html>

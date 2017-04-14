@@ -2,26 +2,23 @@ defmodule Serv.WebServer.Router do
   @moduledoc false
   use Serv.WebServer.Web, :router
 
-  pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_flash
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
-  end
-
   pipeline :api do
     plug :accepts, ["json"]
   end
 
-  scope "/", Serv.WebServer do
-    pipe_through :browser # Use the default browser stack
-
-    get "/", PageController, :index
+  pipeline :assets do
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", Serv.WebServer do
-  #   pipe_through :api
-  # end
+  scope "/assets", Serv.WebServer do
+    pipe_through :assets
+
+    get "/:file_name", AssetController, :show
+  end
+
+  scope "/api", Serv.WebServer do
+    pipe_through :api
+
+    get "/files", FileController, :index
+    get "/files/:file_name", FileController, :show
+  end
 end

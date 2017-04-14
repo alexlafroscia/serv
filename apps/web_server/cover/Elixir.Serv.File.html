@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>cover/Elixir.Serv.File.html</title>
+</head><body style='background-color: white; color: black'>
+<pre>
+File generated from /Users/alexlafroscia/Code/elixir/serv/apps/file_manager/lib/file.ex by COVER 2017-04-13 at 23:49:46
+
+****************************************************************************
+
+        |  defmodule Serv.File do
+        |    @moduledoc """
+        |    Representation of a file
+        |  
+        |    A file represents a group of file instances, representing the same "logical"
+        |    file. Each instance represents a version of this particular file
+        |    """
+        |  
+        |    alias Serv.FileInstance, as: FileInstance
+        |  
+        |    @enforce_keys [:name, :extension]
+    13..|    defstruct [:name, :extension]
+        |  
+        |    @directory Application.get_env(:file_manager, :data_path)
+        |  
+        |    @doc """
+        |    Retrieve a list of instances of a file
+        |    """
+        |    def get_instances(file) do
+        |      location = storage_directory(file)
+        |  
+        |      case File.ls(location) do
+        |        {:ok, instances} -&gt; instances
+        |          |&gt; Enum.map(fn(hash) -&gt; FileInstance.get(file, hash) end)
+        |      end
+        |    end
+        |  
+        |    @doc """
+        |    Get the full name for a file
+        |  
+        |    ## Examples
+        |  
+        |      iex&gt; file = %Serv.File{name: "fixture-a", extension: "txt"}
+        |      iex&gt; file |&gt; Serv.File.file_name
+        |      "fixture-a.txt"
+        |  
+        |    """
+        |    def file_name(file) do
+        |      [file.name, file.extension] |&gt; Enum.join(".")
+        |    end
+        |  
+        |    @doc """
+        |    Get the storage directory for a file
+        |    """
+        |    def storage_directory(file) do
+        |      file_directory = file_name(file)
+        |      Path.join(@directory, file_directory)
+        |    end
+        |  end
+</pre>
+</body>
+</html>
