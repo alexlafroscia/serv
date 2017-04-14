@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>cover/Elixir.Serv.WebServer.html</title>
+</head><body style='background-color: white; color: black'>
+<pre>
+File generated from /Users/alexlafroscia/Code/elixir/serv/apps/web_server/lib/web_server.ex by COVER 2017-04-13 at 23:49:46
+
+****************************************************************************
+
+        |  defmodule Serv.WebServer do
+        |    @moduledoc false
+        |    use Application
+        |  
+        |    # See http://elixir-lang.org/docs/stable/elixir/Application.html
+        |    # for more information on OTP Applications
+        |    def start(_type, _args) do
+        |      import Supervisor.Spec
+        |  
+        |      # Define workers and child supervisors to be supervised
+<font color=red>     0..|      children = [</font>
+        |        # Start the endpoint when the application starts
+        |        supervisor(Serv.WebServer.Endpoint, []),
+        |        # Start your own worker by calling:
+        |        #   Serv.WebServer.Worker.start_link(arg1, arg2, arg3)
+        |        #   worker(Serv.WebServer.Worker, [arg1, arg2, arg3]),
+        |      ]
+        |  
+        |      # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
+        |      # for other strategies and supported options
+<font color=red>     0..|      opts = [strategy: :one_for_one, name: Serv.WebServer.Supervisor]</font>
+<font color=red>     0..|      Supervisor.start_link(children, opts)</font>
+        |    end
+        |  
+        |    # Tell Phoenix to update the endpoint configuration
+        |    # whenever the application is updated.
+        |    def config_change(changed, _new, removed) do
+<font color=red>     0..|      Serv.WebServer.Endpoint.config_change(changed, removed)</font>
+        |      :ok
+        |    end
+        |  end
+</pre>
+</body>
+</html>

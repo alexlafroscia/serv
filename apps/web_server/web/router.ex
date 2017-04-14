@@ -6,6 +6,10 @@ defmodule Serv.WebServer.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/api", Serv.WebServer do
+    pipe_through :api
 
+    get "/files", FileController, :index
+    get "/files/:file_name", FileController, :show
   end
 end
