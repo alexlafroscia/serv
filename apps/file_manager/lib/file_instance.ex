@@ -65,12 +65,23 @@ defmodule Serv.FileInstance do
     iex> Serv.FileInstance.get_content(instance)
     "file content\\n"
 
+    iex> file = %Serv.File{name: "fixture-a", extension: "txt"}
+    iex> instance = Serv.FileInstance.get(file, "abc")
+    iex> Serv.FileInstance.get_content(instance, :original)
+    "file content\\n"
+
   """
-  def get_content(instance) do
+  def get_content(instance, version \\ :original) do
     file_name = Serv.File.file_name(instance.file)
     path = instance
            |> location_for
            |> Path.join(file_name)
+
+    path =
+      case version do
+        :original -> path
+        :gzip -> [path, "gz"] |> Enum.join(".")
+      end
 
     case File.read(path) do
       {:ok, content} -> to_string(content)

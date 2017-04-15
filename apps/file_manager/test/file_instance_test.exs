@@ -2,6 +2,11 @@ defmodule ServFileInstanceTest do
   use ExUnit.Case
   doctest Serv.FileInstance
 
+  @fixture_a %Serv.File{
+    name: "fixture-a",
+    extension: "txt"
+  }
+
   setup do
     on_exit(fn() ->
       # Reset the fixtures
@@ -10,10 +15,7 @@ defmodule ServFileInstanceTest do
   end
 
   test "creating a new instance" do
-    file = %Serv.File{
-      name: "fixture-a",
-      extension: "txt"
-    }
+    file = @fixture_a
     content = "dummy content"
     {:ok, instance} = Serv.FileInstance.create(file, content)
 
@@ -29,5 +31,15 @@ defmodule ServFileInstanceTest do
       "fixture-a.txt/90C55A38064627DCA337DFA5FC5BE120/fixture-a.txt.gz"
     )
     assert is_binary(gzip_written_content)
+  end
+
+  test "getting the gzipped content of a file" do
+    instance = %Serv.FileInstance{
+      file: @fixture_a,
+      hash: "abc"
+    }
+    content = Serv.FileInstance.get_content(instance, :gzip)
+
+    assert is_binary(content)
   end
 end
