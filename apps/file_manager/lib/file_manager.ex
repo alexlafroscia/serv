@@ -1,3 +1,5 @@
+require Logger
+
 defmodule Serv.FileManager do
   @moduledoc """
   File Management Module
@@ -37,6 +39,8 @@ defmodule Serv.FileManager do
   """
   def get_file(name) do
     full_path = Path.join(@directory, name)
+
+    Logger.debug full_path
 
     case File.dir?(full_path) do
       true ->

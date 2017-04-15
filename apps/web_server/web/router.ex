@@ -9,7 +9,7 @@ defmodule Serv.WebServer.Router do
   pipeline :assets do
   end
 
-  scope "/assets", Serv.WebServer do
+  scope "/", Serv.WebServer do
     pipe_through :assets
 
     get "/:file_name", AssetController, :show
