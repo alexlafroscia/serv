@@ -8,13 +8,13 @@ defmodule Serv.WebServer.AssetController do
 
   def show(conn, %{"file_name" => file_name}) do
     case Serv.FileManager.get_file(file_name) do
-      nil ->
+      {:ok, file} ->
+        conn
+        |> render_content(file)
+      {:error, :not_found} ->
         conn
         |> put_status(:not_found)
         |> text("")
-      file ->
-        conn
-        |> render_content(file)
     end
   end
 

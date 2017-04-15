@@ -15,7 +15,7 @@ defmodule ServFileInstanceTest do
       extension: "txt"
     }
     content = "dummy content"
-    instance = Serv.FileInstance.create(file, content)
+    {:ok, instance} = Serv.FileInstance.create(file, content)
 
     assert instance.file === file
     assert instance.hash === "90C55A38064627DCA337DFA5FC5BE120"

@@ -14,24 +14,24 @@ defmodule Serv.WebServer.FileController do
 
   def show(conn, %{"file_name" => file_name}) do
     case Serv.FileManager.get_file(file_name) do
-      nil ->
+      {:ok, file} ->
+        render(conn, "show.json", file: file)
+      {:error, :not_found} ->
         conn
         |> put_status(:not_found)
-        |> render(Serv.WebServer.ErrorView, "not_found.json", %{})
-      file ->
-        render(conn, "show.json", file: file)
+        |> render(Serv.WebServer.ErrorView, "404.json", %{})
     end
   end
 
   def file_content(conn, %{"file_name" => file_name}) do
     case Serv.FileManager.get_file(file_name) do
-      nil ->
+      {:ok, file} ->
+        conn
+        |> render_content(file)
+      {:error, :not_found} ->
         conn
         |> put_status(:not_found)
         |> text("")
-      file ->
-        conn
-        |> render_content(file)
     end
   end
 

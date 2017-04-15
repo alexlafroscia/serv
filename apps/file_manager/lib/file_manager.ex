@@ -28,13 +28,10 @@ defmodule Serv.FileManager do
   ## Examples
 
     iex> Serv.FileManager.get_file("fixture-a.txt")
-    %Serv.File{
-      name: "fixture-a",
-      extension: "txt"
-    }
+    {:ok, %Serv.File{name: "fixture-a", extension: "txt"}}
 
     iex> Serv.FileManager.get_file("some-invalid-file")
-    nil
+    {:error, :not_found}
 
   """
   def get_file(name) do
@@ -45,8 +42,9 @@ defmodule Serv.FileManager do
     case File.dir?(full_path) do
       true ->
         {name, ext} = parse_filename(name)
-        %Serv.File{name: name, extension: ext}
-      false -> nil
+        {:ok, %Serv.File{name: name, extension: ext}}
+      false ->
+        {:error, :not_found}
     end
   end
 
@@ -60,9 +58,9 @@ defmodule Serv.FileManager do
 
     file =
       case get_file(file_name) do
-        nil ->
+        {:ok, found_file} -> found_file
+        {:error, :not_found} ->
           %Serv.File{name: name, extension: ext}
-        found_file -> found_file
       end
 
     create_instance(file, file_content)

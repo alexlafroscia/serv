@@ -17,7 +17,7 @@ defmodule ServFileManagerTest do
 
   test "creating a new instance of an existing file, with a file name" do
     file_content = "file content"
-    instance = Serv.FileManager.create_instance("fixture-a.txt", file_content)
+    {:ok, instance} = Serv.FileManager.create_instance("fixture-a.txt", file_content)
 
     assert instance == %Serv.FileInstance{
       file: %Serv.File{
@@ -39,7 +39,7 @@ defmodule ServFileManagerTest do
       name: "fixture-a",
       extension: "txt"
     }
-    instance = Serv.FileManager.create_instance(file, file_content)
+    {:ok, instance} = Serv.FileManager.create_instance(file, file_content)
 
     assert instance == %Serv.FileInstance{
       file: file,
@@ -54,7 +54,7 @@ defmodule ServFileManagerTest do
 
   test "creating a new file" do
     file_content = "file content"
-    instance = Serv.FileManager.create_instance(
+    {:ok, instance} = Serv.FileManager.create_instance(
       "some-new-file.txt",
       file_content
     )

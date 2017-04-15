@@ -6,7 +6,15 @@ defmodule Serv.WebServer.ErrorView do
     "Page not found"
   end
 
-  def render("not_found.json", _assigns) do
+  def render("404.json", _assigns) do
+    %{
+      errors: [
+
+      ]
+    }
+  end
+
+  def render("500.json", _assigns) do
     %{
       errors: [
 

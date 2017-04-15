@@ -91,7 +91,7 @@ defmodule Serv.FileInstance do
                 |> Path.join(file_name)
 
     case File.write(full_path, content) do
-      :ok -> instance
+      :ok -> {:ok, instance}
       {:error, reason} -> {:error, reason}
     end
   end
