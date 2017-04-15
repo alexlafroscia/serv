@@ -24,5 +24,10 @@ defmodule ServFileInstanceTest do
       "fixture-a.txt/90C55A38064627DCA337DFA5FC5BE120/fixture-a.txt"
     )
     assert written_content === content
+
+    gzip_written_content = TestHelpers.read_file(
+      "fixture-a.txt/90C55A38064627DCA337DFA5FC5BE120/fixture-a.txt.gz"
+    )
+    assert is_binary(gzip_written_content)
   end
 end

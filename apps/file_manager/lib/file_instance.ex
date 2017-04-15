@@ -95,17 +95,33 @@ defmodule Serv.FileInstance do
                 |> location_for
                 |> Path.join(file_name)
 
-    write_original_task = write_original_content(full_path, content)
+    results = Task.yield_many([
+      write_original_content(full_path, content),
+      write_gzip_content(full_path, content)
+    ], 5000)
 
-    case Task.await(write_original_task) do
-      {:error, reason} -> {:error, reason}
-      :ok -> {:ok, instance}
+    # Get just the results from the tasks
+    results = results
+              |> Enum.map(fn({_, result}) -> result end)
+              |> Enum.map(fn({:ok, result}) -> result end)
+
+    case results do
+      [:ok, :ok] -> {:ok, instance}
+      errors -> errors
     end
   end
 
   defp write_original_content(path, content) do
     Task.async(fn ->
       File.write(path, content)
+    end)
+  end
+
+  defp write_gzip_content(path, content) do
+    path = [path, 'gz'] |> Enum.join(".")
+
+    Task.async(fn ->
+      File.write(path, content, [:compressed])
     end)
   end
 end
