@@ -84,20 +84,28 @@ defmodule Serv.FileInstance do
     |> Path.join(instance.hash)
   end
 
+  defp calculate_hash(content) do
+    hash = :crypto.hash(:md5, content)
+    Base.encode16(hash)
+  end
+
   defp write_content(instance, content) do
     file_name = instance.file |> Serv.File.file_name
     full_path = instance
                 |> location_for
                 |> Path.join(file_name)
 
-    case File.write(full_path, content) do
-      :ok -> {:ok, instance}
+    write_original_task = write_original_content(full_path, content)
+
+    case Task.await(write_original_task) do
       {:error, reason} -> {:error, reason}
+      :ok -> {:ok, instance}
     end
   end
 
-  defp calculate_hash(content) do
-    hash = :crypto.hash(:md5, content)
-    Base.encode16(hash)
+  defp write_original_content(path, content) do
+    Task.async(fn ->
+      File.write(path, content)
+    end)
   end
 end
