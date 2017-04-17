@@ -27,7 +27,6 @@ defmodule Serv.WebServer.Web do
       use Phoenix.Controller, namespace: Serv.WebServer
 
       import Serv.WebServer.Router.Helpers
-      import Serv.WebServer.Gettext
     end
   end
 
@@ -39,7 +38,6 @@ defmodule Serv.WebServer.Web do
       import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1]
 
       import Serv.WebServer.Router.Helpers
-      import Serv.WebServer.Gettext
     end
   end
 
@@ -52,7 +50,6 @@ defmodule Serv.WebServer.Web do
   def channel do
     quote do
       use Phoenix.Channel
-      import Serv.WebServer.Gettext
     end
   end
 
