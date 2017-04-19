@@ -39,9 +39,14 @@ defmodule Serv.WebServer.AssetController do
   end
 
   defp determine_encoding(values) do
-    values = values
+    values =
+      cond do
+        Enum.empty?(values) ->
+          values
+        true -> values
              |> Enum.at(0)
              |> String.split(",", trim: true)
+      end
 
     case Enum.member?(values, "gzip") do
       true -> :gzip
