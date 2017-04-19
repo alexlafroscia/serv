@@ -20,6 +20,7 @@ defmodule Serv.File do
     case File.ls(location) do
       {:ok, instances} -> instances
         |> Enum.map(fn(hash) -> get(file, hash) end)
+        |> Enum.map(fn({:ok, file}) -> file end)
     end
   end
 
@@ -30,13 +31,17 @@ defmodule Serv.File do
 
     iex> file = %Serv.File{name: "fixture-a", extension: "txt"}
     iex> Serv.File.get(file, "abc")
-    %Serv.FileInstance{
+    {:ok, %Serv.FileInstance{
       file: %Serv.File{
         name: "fixture-a",
         extension: "txt"
       },
       hash: "abc"
-    }
+    }}
+
+    iex> file = %Serv.File{name: "fixture-a", extension: "txt"}
+    iex> Serv.File.get(file, "some-unknown-identifier")
+    {:error, :not_found}
 
   """
   def get(file, hash) do
@@ -44,8 +49,10 @@ defmodule Serv.File do
     instance_dir = [file_directory, hash] |> Path.join
 
     case File.dir?(instance_dir) do
-      true -> %Serv.FileInstance{file: file, hash: hash}
-      false -> nil
+      true ->
+        {:ok, %Serv.FileInstance{file: file, hash: hash}}
+      false ->
+        {:error, :not_found}
     end
   end
 

@@ -35,12 +35,12 @@ defmodule Serv.FileInstance do
   ## Examples
 
     iex> file = %Serv.File{name: "fixture-a", extension: "txt"}
-    iex> instance = Serv.File.get(file, "abc")
+    iex> {:ok, instance} = Serv.File.get(file, "abc")
     iex> Serv.FileInstance.get_content(instance)
     "file content\\n"
 
     iex> file = %Serv.File{name: "fixture-a", extension: "txt"}
-    iex> instance = Serv.File.get(file, "abc")
+    iex> {:ok, instance} = Serv.File.get(file, "abc")
     iex> Serv.FileInstance.get_content(instance, :original)
     "file content\\n"
 
