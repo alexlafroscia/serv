@@ -6,8 +6,6 @@ defmodule Serv.File do
   file. Each instance represents a version of this particular file
   """
 
-  alias Serv.FileInstance, as: FileInstance
-
   @enforce_keys [:name, :extension]
   defstruct [:name, :extension]
 
@@ -21,7 +19,33 @@ defmodule Serv.File do
 
     case File.ls(location) do
       {:ok, instances} -> instances
-        |> Enum.map(fn(hash) -> FileInstance.get(file, hash) end)
+        |> Enum.map(fn(hash) -> get(file, hash) end)
+    end
+  end
+
+  @doc """
+  Gets a file instance by the hash
+
+  ## Examples
+
+    iex> file = %Serv.File{name: "fixture-a", extension: "txt"}
+    iex> Serv.File.get(file, "abc")
+    %Serv.FileInstance{
+      file: %Serv.File{
+        name: "fixture-a",
+        extension: "txt"
+      },
+      hash: "abc"
+    }
+
+  """
+  def get(file, hash) do
+    file_directory = Serv.File.storage_directory(file)
+    instance_dir = [file_directory, hash] |> Path.join
+
+    case File.dir?(instance_dir) do
+      true -> %Serv.FileInstance{file: file, hash: hash}
+      false -> nil
     end
   end
 

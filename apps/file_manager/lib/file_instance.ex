@@ -30,43 +30,17 @@ defmodule Serv.FileInstance do
   end
 
   @doc """
-  Gets a file instance by the hash
-
-  ## Examples
-
-    iex> file = %Serv.File{name: "fixture-a", extension: "txt"}
-    iex> Serv.FileInstance.get(file, "abc")
-    %Serv.FileInstance{
-      file: %Serv.File{
-        name: "fixture-a",
-        extension: "txt"
-      },
-      hash: "abc"
-    }
-
-  """
-  def get(file, hash) do
-    file_directory = Serv.File.storage_directory(file)
-    instance_dir = [file_directory, hash] |> Path.join
-
-    case File.dir?(instance_dir) do
-      true -> %Serv.FileInstance{file: file, hash: hash}
-      false -> nil
-    end
-  end
-
-  @doc """
   Get the contents of a file instance
 
   ## Examples
 
     iex> file = %Serv.File{name: "fixture-a", extension: "txt"}
-    iex> instance = Serv.FileInstance.get(file, "abc")
+    iex> instance = Serv.File.get(file, "abc")
     iex> Serv.FileInstance.get_content(instance)
     "file content\\n"
 
     iex> file = %Serv.File{name: "fixture-a", extension: "txt"}
-    iex> instance = Serv.FileInstance.get(file, "abc")
+    iex> instance = Serv.File.get(file, "abc")
     iex> Serv.FileInstance.get_content(instance, :original)
     "file content\\n"
 
