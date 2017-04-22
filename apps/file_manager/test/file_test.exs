@@ -1,5 +1,6 @@
 defmodule ServFileTest do
   use ExUnit.Case
+  use Serv.FixtureHelpers
   doctest Serv.File
 
   test "retrieving the instances of a file" do
@@ -23,7 +24,7 @@ defmodule ServFileTest do
     }
 
     directory = Serv.File.storage_directory file
-    correct_path = Path.join(TestHelpers.temp_dir, "fixture-a.txt")
+    correct_path = Path.join(FixtureHelpers.temp_dir, "fixture-a.txt")
 
     assert directory === correct_path
     assert File.dir?(directory)

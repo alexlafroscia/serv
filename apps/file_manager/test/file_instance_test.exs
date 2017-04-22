@@ -1,5 +1,6 @@
 defmodule ServFileInstanceTest do
   use ExUnit.Case
+  use Serv.FixtureHelpers
   doctest Serv.FileInstance
 
   @fixture_a %Serv.File{
@@ -7,13 +8,7 @@ defmodule ServFileInstanceTest do
     extension: "txt"
   }
 
-  setup do
-    on_exit(fn() ->
-      # Reset the fixtures
-      TestHelpers.reset_fixtures()
-    end)
-  end
-
+  @tag :reset_fixtures
   test "creating a new instance" do
     file = @fixture_a
     content = "dummy content"
@@ -22,12 +17,12 @@ defmodule ServFileInstanceTest do
     assert instance.file === file
     assert instance.hash === "90C55A38064627DCA337DFA5FC5BE120"
 
-    written_content = TestHelpers.read_file(
+    written_content = FixtureHelpers.read_file(
       "fixture-a.txt/90C55A38064627DCA337DFA5FC5BE120/fixture-a.txt"
     )
     assert written_content === content
 
-    gzip_written_content = TestHelpers.read_file(
+    gzip_written_content = FixtureHelpers.read_file(
       "fixture-a.txt/90C55A38064627DCA337DFA5FC5BE120/fixture-a.txt.gz"
     )
     assert is_binary(gzip_written_content)

@@ -1,5 +1,6 @@
 defmodule Serv.WebServer.FileControllerTest do
   use Serv.WebServer.ConnCase
+  use Serv.FixtureHelpers
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}

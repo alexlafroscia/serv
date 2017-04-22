@@ -1,12 +1,7 @@
 defmodule ServFileManagerTest do
   use ExUnit.Case
+  use Serv.FixtureHelpers
   doctest Serv.FileManager
-
-  setup do
-    on_exit(fn ->
-      TestHelpers.reset_fixtures()
-    end)
-  end
 
   test "listing the available files" do
     files = Serv.FileManager.list
@@ -15,6 +10,7 @@ defmodule ServFileManagerTest do
     assert Enum.member?(files, %Serv.File{name: "fixture-b.min", extension: "js"})
   end
 
+  @tag :reset_fixtues
   test "creating a new instance of an existing file, with a file name" do
     file_content = "file content"
     {:ok, instance} = Serv.FileManager.create_instance("fixture-a.txt", file_content)
@@ -27,12 +23,13 @@ defmodule ServFileManagerTest do
       hash: "D10B4C3FF123B26DC068D43A8BEF2D23"
     }
 
-    written_content = TestHelpers.read_file(
+    written_content = FixtureHelpers.read_file(
       "fixture-a.txt/D10B4C3FF123B26DC068D43A8BEF2D23/fixture-a.txt"
     )
     assert written_content == file_content
   end
 
+  @tag :reset_fixtues
   test "creating a new instance of an existing file, with a file struct" do
     file_content = "file content"
     file = %Serv.File{
@@ -46,12 +43,13 @@ defmodule ServFileManagerTest do
       hash: "D10B4C3FF123B26DC068D43A8BEF2D23"
     }
 
-    written_content = TestHelpers.read_file(
+    written_content = FixtureHelpers.read_file(
       "fixture-a.txt/D10B4C3FF123B26DC068D43A8BEF2D23/fixture-a.txt"
     )
     assert written_content == file_content
   end
 
+  @tag :reset_fixtues
   test "creating a new file" do
     file_content = "file content"
     {:ok, instance} = Serv.FileManager.create_instance(
@@ -67,7 +65,7 @@ defmodule ServFileManagerTest do
       hash: "D10B4C3FF123B26DC068D43A8BEF2D23"
     }
 
-    written_content = TestHelpers.read_file(
+    written_content = FixtureHelpers.read_file(
       "some-new-file.txt/D10B4C3FF123B26DC068D43A8BEF2D23/some-new-file.txt"
     )
     assert written_content == file_content
