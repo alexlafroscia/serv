@@ -50,26 +50,46 @@ defmodule Serv.FileManager do
   Given a file name and content, create a new file instance
   """
   def create_instance(file_name, file_content) when is_binary(file_name) do
-    {name, ext} = parse_filename(file_name)
-
     file =
       case get_file(file_name) do
         {:ok, found_file} -> found_file
         {:error, :not_found} ->
-          %Serv.File{name: name, extension: ext}
+          Serv.File.create(file_name)
       end
 
     create_instance(file, file_content)
   end
 
   def create_instance(file, file_content) do
-    FileInstance.create(file, file_content)
+    case FileInstance.create(file, file_content) do
+      {:ok, instance} ->
+        ensure_default_label(instance)
+      {:error, errors} ->
+        {:error, errors}
+    end
   end
 
-  defp parse_filename(path) do
+  @doc """
+  Pull apart the name and extension for a string
+
+    iex> Serv.FileManager.parse_filename("some-file.txt")
+    {"some-file", "txt"}
+
+  """
+  def parse_filename(path) do
     ext = Path.extname(path)
     basename = Path.basename(path, ext)
 
     {basename, String.slice(ext, 1..-1)}
+  end
+
+  defp ensure_default_label(instance) do
+    case Serv.File.get(instance.file, "default") do
+      {:ok, _} ->
+        {:ok, instance}
+      {:error, :not_found} ->
+        :ok = Serv.FileInstance.set_label(instance, "default")
+        {:ok, instance}
+    end
   end
 end

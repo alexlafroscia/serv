@@ -13,6 +13,34 @@ defmodule Serv.File do
   @meta_file_name "meta.json"
 
   @doc """
+  Create a new file, setting up the initial metadata
+
+  ## Examples
+
+    iex> Serv.File.create("some-file.txt")
+    %Serv.File{name: "some-file", extension: "txt"}
+
+  """
+  def create(file_name) do
+    {name, ext} = Serv.FileManager.parse_filename(file_name)
+
+    file = %Serv.File{name: name, extension: ext}
+    base_meta = %{
+      "labels" => %{}
+    }
+
+    path = storage_directory(file)
+    unless File.dir?(path) do
+      File.mkdir_p(path)
+    end
+
+    case set_metadata(file, base_meta) do
+      :ok -> file
+      {:error, reason} -> {:error, reason}
+    end
+  end
+
+  @doc """
   Retrieve a list of instances of a file
   """
   def get_instances(file) do
@@ -85,7 +113,7 @@ defmodule Serv.File do
 
   """
   def labels(file) do
-    case metadata(file) do
+    case get_metadata(file) do
       {:ok, meta} ->
         label_map = meta["labels"]
         label_map
@@ -122,15 +150,39 @@ defmodule Serv.File do
     Path.join(@directory, file_directory)
   end
 
-  defp metadata(file) do
-    storage_path = storage_directory(file)
-    meta_file = Path.join([storage_path, @meta_file_name])
+  @doc """
+  Get the metadata for a file
+
+  ## Example
+
+    iex> file = %Serv.File{name: "fixture-a", extension: "txt"}
+    iex> Serv.File.get_metadata(file)
+    {:ok, %{
+      "labels" => %{
+        "default" => "abc"
+      }
+    }}
+
+  """
+  def get_metadata(file) do
+    meta_file = meta_file_path(file)
 
     case File.read(meta_file) do
       {:ok, meta_content} ->
         Poison.Parser.parse(meta_content)
       {:error, reason} ->
         {:error, reason}
+    end
+  end
+
+  def set_metadata(file, meta) do
+    meta_file = meta_file_path(file)
+
+    case Poison.encode(meta) do
+      {:ok, content} ->
+        File.write(meta_file, content)
+      {:error, error} ->
+        {:error, error}
     end
   end
 
@@ -143,5 +195,10 @@ defmodule Serv.File do
       :error ->
         {:error, :not_found}
     end
+  end
+
+  defp meta_file_path(file) do
+    storage_path = storage_directory(file)
+    Path.join([storage_path, @meta_file_name])
   end
 end

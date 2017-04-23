@@ -37,4 +37,24 @@ defmodule ServFileInstanceTest do
 
     assert is_binary(content)
   end
+
+  @tag :reset_fixtures
+  test "setting a label for a file instance" do
+    instance = %Serv.FileInstance{
+      file: @fixture_a,
+      hash: "abc"
+    }
+
+    :ok = Serv.FileInstance.set_label(instance, "new-label")
+
+    meta_content = FixtureHelpers.read_file(
+      "fixture-a.txt/meta.json"
+    )
+    assert Poison.Parser.parse(meta_content) == {:ok, %{
+      "labels" => %{
+        "default" => "abc",
+        "new-label" => "abc"
+      }
+    }}
+  end
 end

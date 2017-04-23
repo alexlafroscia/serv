@@ -69,5 +69,15 @@ defmodule ServFileManagerTest do
       "some-new-file.txt/D10B4C3FF123B26DC068D43A8BEF2D23/some-new-file.txt"
     )
     assert written_content == file_content
+
+    {:ok, meta} = "some-new-file.txt/meta.json"
+                  |> FixtureHelpers.read_file
+                  |> Poison.Parser.parse
+
+    assert meta ==  %{
+      "labels" => %{
+        "default" => "D10B4C3FF123B26DC068D43A8BEF2D23"
+      }
+    }
   end
 end

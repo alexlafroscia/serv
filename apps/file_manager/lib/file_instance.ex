@@ -14,10 +14,7 @@ defmodule Serv.FileInstance do
   """
   def create(file, file_content) do
     hash = calculate_hash(file_content)
-    instance = %Serv.FileInstance{
-      file: file,
-      hash: hash
-    }
+    instance = %Serv.FileInstance{file: file, hash: hash}
 
     directory = file
                 |> Serv.File.storage_directory
@@ -60,6 +57,18 @@ defmodule Serv.FileInstance do
     case File.read(path) do
       {:ok, content} -> to_string(content)
     end
+  end
+
+  @doc """
+  Add a label for the current instance
+  """
+  def set_label(instance, label) do
+    {:ok, meta} = Serv.File.get_metadata(instance.file)
+
+    labels = meta["labels"] |> Map.put(label, instance.hash)
+    updated_meta = meta |> Map.put("labels", labels)
+
+    Serv.File.set_metadata(instance.file, updated_meta)
   end
 
   defp location_for(instance) do
