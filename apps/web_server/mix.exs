@@ -42,6 +42,7 @@ defmodule Serv.WebServer.Mixfile do
     [{:phoenix, "~> 1.2.1"},
      {:phoenix_pubsub, "~> 1.0"},
      {:cowboy, "~> 1.0"},
-     {:file_manager, in_umbrella: true}]
+     {:file_manager, in_umbrella: true},
+     {:mime, "~> 1.1"}]
   end
 end

@@ -30,6 +30,10 @@ defmodule Serv.WebServer.AssetController do
         :original -> conn
       end
 
+    mime = MIME.type(file.extension)
+    conn = conn
+           |> Plug.Conn.put_resp_content_type(mime)
+
     content = file
               |> Serv.File.get_instances
               |> Enum.at(0) # Replace this with a lookup based on hash
