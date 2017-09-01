@@ -27,6 +27,7 @@ defmodule ServWeb.Router do
   end
 
   scope "/", ServWeb do
+    get "/", PageController, :redirect_to_index
     get "/:file_name", AssetController, :show
   end
 end
