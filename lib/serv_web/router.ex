@@ -16,7 +16,7 @@ defmodule ServWeb.Router do
   scope "/ui", ServWeb do
     pipe_through :browser # Use the default browser stack
 
-    get "/", PageController, :index
+    get "/*path", PageController, :index
   end
 
   scope "/api", ServWeb do

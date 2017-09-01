@@ -3,7 +3,12 @@ defmodule ServWeb.PageControllerTest do
 
   test "GET /ui", %{conn: conn} do
     conn = get conn, "/ui"
-    assert html_response(conn, 200) =~ "Welcome to Phoenix!"
+    assert html_response(conn, 200) =~ "Files"
+  end
+
+  test "GET /ui/anything", %{conn: conn} do
+    conn = get conn, "/ui/anything"
+    assert html_response(conn, 200) =~ "Files"
   end
 
   test "GET /", %{conn: conn} do
