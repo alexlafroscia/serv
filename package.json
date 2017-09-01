@@ -1,0 +1,26 @@
+{
+  "name": "serv",
+  "version": "1.0.0",
+  "description": "Static file server with versioning",
+  "scripts": {
+    "watch": "webpack --watch-stdin --progress --color",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/alexlafroscia/serv.git"
+  },
+  "author": "Alex LaFroscia <alex@lafroscia.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/alexlafroscia/serv/issues"
+  },
+  "homepage": "https://gitlab.com/alexlafroscia/serv#README",
+  "dependencies": {
+    "phoenix": "file:deps/phoenix",
+    "phoenix_html": "file:deps/phoenix_html"
+  },
+  "devDependencies": {
+    "webpack": "^3.5.5"
+  }
+}
