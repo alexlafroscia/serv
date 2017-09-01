@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Static file server with versioning",
   "scripts": {
+    "build": "webpack --progress --color",
     "watch": "webpack --watch-stdin --progress --color",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,9 +19,15 @@
   "homepage": "https://gitlab.com/alexlafroscia/serv#README",
   "dependencies": {
     "phoenix": "file:deps/phoenix",
-    "phoenix_html": "file:deps/phoenix_html"
+    "phoenix_html": "file:deps/phoenix_html",
+    "preact": "^8.2.5",
+    "preact-router": "^2.5.7"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
     "webpack": "^3.5.5"
   }
 }
