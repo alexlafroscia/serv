@@ -32,7 +32,7 @@ defmodule ServWeb.FileControllerTest do
     "relationships" => %{
       "instances" => %{
         "data" => [
-          %{ "type" => "instance", "id" => "def" }
+          %{"type" => "instance", "id" => "def"}
         ]
       }
     }
