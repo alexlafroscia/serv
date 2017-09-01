@@ -3,12 +3,12 @@ defmodule ServWeb.PageControllerTest do
 
   test "GET /ui", %{conn: conn} do
     conn = get conn, "/ui"
-    assert html_response(conn, 200) =~ "Files"
+    assert html_response(conn, 200) =~ "preact-router-anchor"
   end
 
   test "GET /ui/anything", %{conn: conn} do
     conn = get conn, "/ui/anything"
-    assert html_response(conn, 200) =~ "Files"
+    assert html_response(conn, 200) =~ "preact-router-anchor"
   end
 
   test "GET /", %{conn: conn} do
