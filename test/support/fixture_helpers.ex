@@ -44,4 +44,8 @@ defmodule Serv.FixtureHelpers do
   def temp_dir do
     Application.get_env(:serv, :data_path)
   end
+
+  def upload_fixture_dir do
+    Path.join(__DIR__, "../__upload_fixtures__")
+  end
 end

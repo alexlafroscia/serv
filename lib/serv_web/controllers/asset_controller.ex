@@ -18,6 +18,26 @@ defmodule ServWeb.AssetController do
     end
   end
 
+  def upload(conn, %{"file" => file}) do
+    name = file.filename
+    {:ok, file_content} = File.read file.path
+
+    case Serv.FileManager.create_instance(name, file_content) do
+      {:ok, _} ->
+        conn
+        |> put_status(:created)
+        |> text("")
+      {:error, _} ->
+        conn
+        |> put_status(:bad_request)
+        |> text("")
+    end
+
+    conn
+    |> put_status(:created)
+    |> text("")
+  end
+
   defp render_content(conn, file) do
     format = conn
              |> Plug.Conn.get_req_header("accept-encoding")

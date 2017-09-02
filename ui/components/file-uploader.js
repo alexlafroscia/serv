@@ -43,9 +43,17 @@ export default class extends Component {
   uploadFiles(event) {
     stopEvent(event);
 
-    new Promise(res => {
-      setTimeout(res, 500);
-    }).then(() => {
+    return Promise.all(
+      this.state.files.map(file => {
+        const form = new FormData();
+        form.append('file', file);
+
+        return fetch('/upload', {
+          method: 'POST',
+          body: form
+        });
+      })
+    ).then(() => {
       this.setState({ files: [] });
     });
   }

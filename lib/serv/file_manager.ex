@@ -13,6 +13,9 @@ defmodule Serv.FileManager do
   def list do
     case File.ls(@directory) do
       {:ok, files} -> files
+        |> Enum.filter(fn(name) ->
+          File.dir? Path.join(@directory, name)
+        end)
         |> Enum.map(fn(name) ->
           {name, ext} = parse_filename(name)
           %Serv.File{name: name, extension: ext}
@@ -52,12 +55,14 @@ defmodule Serv.FileManager do
   def create_instance(file_name, file_content) when is_binary(file_name) do
     file =
       case get_file(file_name) do
-        {:ok, found_file} -> found_file
-        {:error, :not_found} ->
-          Serv.File.create(file_name)
+        {:ok, found_file} -> {:ok, found_file}
+        {:error, :not_found} -> Serv.File.create(file_name)
       end
 
-    create_instance(file, file_content)
+    case file do
+      {:error, reason} -> {:error, reason}
+      {:ok, file} -> create_instance(file, file_content)
+    end
   end
 
   def create_instance(file, file_content) do

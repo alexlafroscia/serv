@@ -28,6 +28,8 @@ defmodule ServWeb.Router do
 
   scope "/", ServWeb do
     get "/", PageController, :redirect_to_index
+
+    post "/upload", AssetController, :upload
     get "/:file_name", AssetController, :show
   end
 end

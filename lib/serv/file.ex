@@ -18,7 +18,7 @@ defmodule Serv.File do
   ## Examples
 
     iex> Serv.File.create("some-file.txt")
-    %Serv.File{name: "some-file", extension: "txt"}
+    {:ok, %Serv.File{name: "some-file", extension: "txt"}}
 
   """
   def create(file_name) do
@@ -35,7 +35,7 @@ defmodule Serv.File do
     end
 
     case set_metadata(file, base_meta) do
-      :ok -> file
+      :ok -> {:ok, file}
       {:error, reason} -> {:error, reason}
     end
   end
