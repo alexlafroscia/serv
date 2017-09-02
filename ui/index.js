@@ -1,17 +1,14 @@
 import Router from 'preact-router';
 import { h, render } from 'preact';
 
-import FileUploader from './components/file-uploader';
 import Files from './pages/files';
+import File from './pages/file';
 
 const Main = () => (
-  <FileUploader>
-    <div class="container">
-      <Router>
-        <Files path="/ui" />
-      </Router>
-    </div>
-  </FileUploader>
+  <Router>
+    <Files path="/ui" />
+    <File path="/ui/:fileName" />
+  </Router>
 );
 
 render(<Main />, document.getElementById('preact-router-anchor'));

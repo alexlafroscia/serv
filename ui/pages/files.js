@@ -1,5 +1,7 @@
 import { h, Component } from 'preact';
-import FileList from '../components/file-list';
+
+import FileUploader from '../components/file-uploader';
+import ListItem from '../components/list-item';
 
 export default class extends Component {
   constructor() {
@@ -22,10 +24,23 @@ export default class extends Component {
     const { files } = this.state;
 
     return (
-      <div>
-        <h1>Files</h1>
-        <FileList files={files} />
-      </div>
+      <FileUploader>
+        <div class="container">
+          <h1>Files</h1>
+
+          {files.map(({ attributes }) => {
+            const fileName = `${attributes.name}.${attributes.extension}`;
+
+            return (
+              <ListItem
+                title={fileName}
+                linkHref={`/ui/${fileName}`}
+                fileHref={`/${fileName}`}
+              />
+            );
+          })}
+        </div>
+      </FileUploader>
     );
   }
 }
