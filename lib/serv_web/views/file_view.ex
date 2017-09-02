@@ -6,6 +6,13 @@ defmodule ServWeb.FileView do
     %{data: render_many(files, ServWeb.FileView, "file.json")}
   end
 
+  def render("show.json", %{file: file, instances: instances}) do
+    %{
+      data: render_one(file, ServWeb.FileView, "file.json"),
+      included: render_many(instances, ServWeb.InstanceView, "instance.json")
+    }
+  end
+
   def render("show.json", %{file: file}) do
     %{data: render_one(file, ServWeb.FileView, "file.json")}
   end

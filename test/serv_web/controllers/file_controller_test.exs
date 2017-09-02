@@ -52,6 +52,18 @@ defmodule ServWeb.FileControllerTest do
     assert json_response(conn, 200)["data"] == @fixture_a
   end
 
+  test "includes instances in response when requested", %{conn: conn} do
+    conn = get conn, "/api/files/fixture-a.txt?include=instances"
+
+    assert json_response(conn, 200)["data"] == @fixture_a
+    assert json_response(conn, 200)["included"] == [
+      %{
+        "type" => "instance",
+        "id" => "abc"
+      }
+    ]
+  end
+
   test "renders page not found when id is nonexistent", %{conn: conn} do
     conn = get conn, "/api/files/some-unknown-file.txt"
 
