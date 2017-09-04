@@ -80,4 +80,11 @@ defmodule ServFileManagerTest do
       }
     }
   end
+
+  test "rejects a file with a space in the name" do
+    assert {:error, :invalid_file_name} == Serv.FileManager.create_instance(
+      "some name with spaces.txt",
+      "some content"
+    )
+  end
 end

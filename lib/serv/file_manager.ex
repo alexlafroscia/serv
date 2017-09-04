@@ -53,15 +53,10 @@ defmodule Serv.FileManager do
   Given a file name and content, create a new file instance
   """
   def create_instance(file_name, file_content) when is_binary(file_name) do
-    file =
-      case get_file(file_name) do
-        {:ok, found_file} -> {:ok, found_file}
-        {:error, :not_found} -> Serv.File.create(file_name)
-      end
-
-    case file do
-      {:error, reason} -> {:error, reason}
-      {:ok, file} -> create_instance(file, file_content)
+    with :ok <- validate_name(file_name),
+         {:ok, file} <- get_or_create_file(file_name)
+    do
+      create_instance(file, file_content)
     end
   end
 
@@ -95,6 +90,21 @@ defmodule Serv.FileManager do
       {:error, :not_found} ->
         :ok = Serv.FileInstance.set_label(instance, "default")
         {:ok, instance}
+    end
+  end
+
+  defp validate_name(file_name) do
+    if String.contains? file_name, " "  do
+      {:error, :invalid_file_name}
+    else
+      :ok
+    end
+  end
+
+  defp get_or_create_file(file_name) do
+    case get_file(file_name) do
+      {:ok, found_file} -> {:ok, found_file}
+      {:error, :not_found} -> Serv.File.create(file_name)
     end
   end
 end
