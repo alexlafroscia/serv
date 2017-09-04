@@ -1,7 +1,9 @@
 import { h, Component } from 'preact';
+import { Link } from 'preact-router/match';
 
 import FileUploader from '../components/file-uploader';
 import ListItem from '../components/list-item';
+import BreadCrumbs from '../components/breadcrumbs';
 
 export default class extends Component {
   constructor() {
@@ -30,10 +32,17 @@ export default class extends Component {
     return (
       <FileUploader>
         <div class="container">
-          <h1>{fileName}</h1>
+          <BreadCrumbs>
+            <Link href="/ui">Files</Link>
+            {fileName}
+          </BreadCrumbs>
 
           {instances.map(instance => (
-            <ListItem fileHref={`/${fileName}`} title={instance.id} />
+            <ListItem
+              title={instance.id}
+              linkHref={`/ui/${fileName}/${instance.id}`}
+              fileHref={`/${fileName}`}
+            />
           ))}
         </div>
       </FileUploader>

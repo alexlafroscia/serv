@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 
+import BreadCrumbs from '../components/breadcrumbs';
 import FileUploader from '../components/file-uploader';
 import ListItem from '../components/list-item';
 
@@ -26,7 +27,7 @@ export default class extends Component {
     return (
       <FileUploader>
         <div class="container">
-          <h1>Files</h1>
+          <BreadCrumbs>Files</BreadCrumbs>
 
           {files.map(({ attributes }) => {
             const fileName = `${attributes.name}.${attributes.extension}`;
