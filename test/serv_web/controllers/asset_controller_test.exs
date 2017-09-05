@@ -16,6 +16,32 @@ defmodule ServWeb.AssetControllerTest do
     ]
   end
 
+  test "returns the default file when version is not specified", %{conn: conn} do
+    conn = get conn, "/fixture-b.min.js"
+
+    assert conn.state == :sent
+    assert conn.status == 200
+    assert conn.resp_body == "def\n"
+  end
+
+  test "can specify instance ID as a query param", %{conn: conn} do
+    conn = get conn, "/fixture-b.min.js?abc"
+
+    assert conn.state == :sent
+    assert conn.status == 200
+    assert conn.resp_body == "abc\n"
+  end
+
+  test "can specify instance ID as an HTTP header", %{conn: conn} do
+    conn = conn
+           |> Plug.Conn.put_req_header("serv-instance-id", "abc")
+           |> get("/fixture-b.min.js")
+
+    assert conn.state == :sent
+    assert conn.status == 200
+    assert conn.resp_body == "abc\n"
+  end
+
   test "can return a GZIP of a file", %{conn: conn} do
     conn = conn
            |> Plug.Conn.put_req_header("accept-encoding", "gzip")

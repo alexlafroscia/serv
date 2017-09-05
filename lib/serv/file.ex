@@ -79,6 +79,16 @@ defmodule Serv.File do
       hash: "abc"
     }}
 
+    iex> file = %Serv.File{name: "fixture-b.min", extension: "js"}
+    iex> Serv.File.get(file, "def")
+    {:ok, %Serv.FileInstance{
+      file: %Serv.File{
+        name: "fixture-b.min",
+        extension: "js"
+      },
+      hash: "def"
+    }}
+
     iex> file = %Serv.File{name: "fixture-a", extension: "txt"}
     iex> Serv.File.get(file, "some-unknown-identifier")
     {:error, :not_found}

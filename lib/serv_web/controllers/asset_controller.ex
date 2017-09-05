@@ -7,10 +7,13 @@ defmodule ServWeb.AssetController do
   use ServWeb, :controller
 
   def show(conn, %{"file_name" => file_name}) do
+    instance_id = conn
+                  |> fetch_instance_id
+
     case Serv.FileManager.get_file(file_name) do
       {:ok, file} ->
         conn
-        |> render_content(file)
+        |> render_content(file, instance_id)
       {:error, :not_found} ->
         conn
         |> put_status(:not_found)
@@ -38,7 +41,7 @@ defmodule ServWeb.AssetController do
     |> text("")
   end
 
-  defp render_content(conn, file) do
+  defp render_content(conn, file, instance_id) do
     format = conn
              |> Plug.Conn.get_req_header("accept-encoding")
              |> determine_encoding
@@ -54,12 +57,11 @@ defmodule ServWeb.AssetController do
     conn = conn
            |> Plug.Conn.put_resp_content_type(mime)
 
-    content = file
-              |> Serv.File.get_instances
-              |> Enum.at(0) # Replace this with a lookup based on hash
-              |> Serv.FileInstance.get_content(format)
-
-    text(conn, content)
+    with {:ok, instance} <- Serv.File.get(file, instance_id),
+         content <- Serv.FileInstance.get_content(instance, format)
+    do
+      text(conn, content)
+    end
   end
 
   defp determine_encoding(values) do
@@ -75,6 +77,21 @@ defmodule ServWeb.AssetController do
     case Enum.member?(values, "gzip") do
       true -> :gzip
       false -> :original
+    end
+  end
+
+  defp fetch_instance_id(conn) do
+    case URI.parse(current_url(conn)).query do
+      value when is_binary(value) ->
+        String.replace(value, "=", "")
+      _ -> get_instance_id_from_header(conn)
+    end
+  end
+
+  defp get_instance_id_from_header(conn) do
+    case Plug.Conn.get_req_header(conn, "serv-instance-id") do
+      value when length(value) == 1 -> Enum.at(value, 0)
+      value when length(value) == 0 -> "default"
     end
   end
 end
