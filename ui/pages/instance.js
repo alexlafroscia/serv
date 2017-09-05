@@ -48,7 +48,7 @@ export default class extends Component {
 
           <iframe
             style={{ flexGrow: '1', marginBottom: '1em', width: '100%' }}
-            src={`/${fileName}`}
+            src={`/${fileName}?${instanceId}`}
           />
         </div>
       </FileUploader>

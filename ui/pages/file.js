@@ -41,7 +41,7 @@ export default class extends Component {
             <ListItem
               title={instance.id}
               linkHref={`/ui/${fileName}/${instance.id}`}
-              fileHref={`/${fileName}`}
+              fileHref={`/${fileName}?${instance.id}`}
             />
           ))}
         </div>
