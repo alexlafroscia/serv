@@ -58,6 +58,7 @@ defmodule ServWeb.AssetController do
            |> Plug.Conn.put_resp_content_type(mime)
 
     with {:ok, instance} <- Serv.File.get(file, instance_id),
+         conn <- Plug.Conn.put_resp_header(conn, "etag", "\"" <> instance.hash <> "\""),
          content <- Serv.FileInstance.get_content(instance, format)
     do
       text(conn, content)

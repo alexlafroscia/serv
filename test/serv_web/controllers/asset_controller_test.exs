@@ -22,6 +22,7 @@ defmodule ServWeb.AssetControllerTest do
     assert conn.state == :sent
     assert conn.status == 200
     assert conn.resp_body == "def\n"
+    assert Plug.Conn.get_resp_header(conn, "etag") == ["\"def\""]
   end
 
   test "can specify instance ID as a query param", %{conn: conn} do
@@ -30,6 +31,7 @@ defmodule ServWeb.AssetControllerTest do
     assert conn.state == :sent
     assert conn.status == 200
     assert conn.resp_body == "abc\n"
+    assert Plug.Conn.get_resp_header(conn, "etag") == ["\"abc\""]
   end
 
   test "can specify instance ID as an HTTP header", %{conn: conn} do
@@ -40,6 +42,7 @@ defmodule ServWeb.AssetControllerTest do
     assert conn.state == :sent
     assert conn.status == 200
     assert conn.resp_body == "abc\n"
+    assert Plug.Conn.get_resp_header(conn, "etag") == ["\"abc\""]
   end
 
   test "can return a GZIP of a file", %{conn: conn} do
