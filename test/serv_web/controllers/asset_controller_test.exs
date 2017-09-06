@@ -45,6 +45,16 @@ defmodule ServWeb.AssetControllerTest do
     assert Plug.Conn.get_resp_header(conn, "etag") == ["\"abc\""]
   end
 
+  test "responds with a \"not modified\" if the file has already been requested", %{conn: conn} do
+    conn = conn
+           |> Plug.Conn.put_req_header("if-none-match", "\"def\"")
+           |> get("/fixture-b.min.js")
+
+    assert conn.state == :sent
+    assert conn.status == 304
+    assert conn.resp_body == ""
+  end
+
   test "can return a GZIP of a file", %{conn: conn} do
     conn = conn
            |> Plug.Conn.put_req_header("accept-encoding", "gzip")

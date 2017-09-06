@@ -57,11 +57,19 @@ defmodule ServWeb.AssetController do
     conn = conn
            |> Plug.Conn.put_resp_content_type(mime)
 
-    with {:ok, instance} <- Serv.File.get(file, instance_id),
-         conn <- Plug.Conn.put_resp_header(conn, "etag", "\"" <> instance.hash <> "\""),
-         content <- Serv.FileInstance.get_content(instance, format)
-    do
-      text(conn, content)
+    match_header = conn
+                   |> Plug.Conn.get_req_header("if-none-match")
+                   |> Enum.at(0)
+                   |> unwrap_quoted_value
+    {:ok, instance} = Serv.File.get(file, instance_id)
+
+    if instance.hash == match_header do
+      conn
+      |> Plug.Conn.resp(:not_modified, "")
+    else
+      conn
+      |> Plug.Conn.put_resp_header("etag", "\"" <> instance.hash <> "\"")
+      |> text(Serv.FileInstance.get_content(instance, format))
     end
   end
 
@@ -95,4 +103,7 @@ defmodule ServWeb.AssetController do
       value when length(value) == 0 -> "default"
     end
   end
+
+  defp unwrap_quoted_value(value) when is_binary(value), do: Regex.replace(~r/\"/, value, "")
+  defp unwrap_quoted_value(_), do: ""
 end
