@@ -24,7 +24,19 @@ module.exports = {
               }
             ]
           ],
-          plugins: [['transform-react-jsx', { pragma: 'h' }]]
+          plugins: [['transform-react-jsx', { pragma: 'h' }]],
+          env: {
+            production: {
+              presets: [
+                [
+                  'minify',
+                  {
+                    mangle: false
+                  }
+                ]
+              ]
+            }
+          }
         }
       }
     ]

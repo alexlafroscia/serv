@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Static file server with versioning",
   "scripts": {
-    "build": "webpack --progress --color",
-    "watch": "webpack --watch-stdin --progress --color",
+    "build": "webpack",
+    "build:dev": "webpack --watch-stdin --progress --color",
     "lint": "eslint ui",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -30,6 +30,7 @@
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.6.0",
+    "babel-preset-minify": "^0.2.0",
     "eslint": "^4.5.0",
     "eslint-config-prettier": "^2.3.0",
     "eslint-plugin-prettier": "^2.2.0",

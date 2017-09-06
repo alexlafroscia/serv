@@ -12,7 +12,7 @@ config :serv, ServWeb.Endpoint,
   code_reloader: true,
   check_origin: false,
   watchers: [
-    npm: ["run", "watch"]
+    npm: ["run", "build:dev"]
   ]
 
 # ## SSL Support
