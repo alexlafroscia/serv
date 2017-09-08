@@ -1,0 +1,6 @@
+# Elixir things
+_build
+deps
+
+# Node things
+node_modules
