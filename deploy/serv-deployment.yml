@@ -1,0 +1,23 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: serv-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: serv
+    spec:
+      containers:
+      - name: serv
+        image: gcr.io/serv-179106/serv:a4c8bbd85bad45927a86b216d91d6404b6cf79c5
+        ports:
+        - containerPort: 4000
+        volumeMounts:
+          - mountPath: /data
+            name: asset-data
+      volumes:
+        - name: asset-data
+          persistentVolumeClaim:
+            claimName: serv-pv-claim
