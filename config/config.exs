@@ -19,7 +19,9 @@ config :logger, :console,
   metadata: [:request_id]
 
 # Configure the location to check for stored files
-config :serv, data_path: "/data"
+config :serv,
+  data_path: "/data",
+  password: System.get_env("SERV_PASSWORD")
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

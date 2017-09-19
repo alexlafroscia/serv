@@ -65,7 +65,8 @@ else
   "/data"
 end
 
-config :serv, data_path: data_path
+config :serv,
+  data_path: data_path
 
 # Finally import the config/prod.secret.exs
 # which should be versioned separately.

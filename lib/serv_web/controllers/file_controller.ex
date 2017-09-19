@@ -2,7 +2,7 @@ defmodule ServWeb.FileController do
   @moduledoc """
   FileController
 
-  Responsible for serving up static files
+  Responsible for serving up static files and uploading new ones
   """
   use ServWeb, :controller
 
