@@ -22,8 +22,8 @@ defmodule ServWeb.Router do
   scope "/api", ServWeb do
     pipe_through :api
 
-    get "/files", FileController, :index
-    get "/files/:file_name", FileController, :show
+    get "/files", APIController, :index
+    get "/files/:file_name", APIController, :show
   end
 
   scope "/", ServWeb do

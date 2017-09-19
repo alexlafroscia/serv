@@ -1,4 +1,4 @@
-defmodule ServWeb.FileControllerTest do
+defmodule ServWeb.APIControllerTest do
   use ServWeb.ConnCase
   use Serv.FixtureHelpers
 
@@ -40,7 +40,7 @@ defmodule ServWeb.FileControllerTest do
   }
 
   test "lists all entries on index", %{conn: conn} do
-    conn = get conn, file_path(conn, :index)
+    conn = get conn, api_path(conn, :index)
     data = json_response(conn, 200)["data"]
 
     assert Enum.member?(data, @fixture_a)
