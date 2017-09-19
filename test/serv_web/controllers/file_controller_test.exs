@@ -1,4 +1,4 @@
-defmodule ServWeb.AssetControllerTest do
+defmodule ServWeb.FileControllerTest do
   use ServWeb.ConnCase
   use Serv.FixtureHelpers
 

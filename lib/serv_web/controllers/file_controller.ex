@@ -1,6 +1,6 @@
-defmodule ServWeb.AssetController do
+defmodule ServWeb.FileController do
   @moduledoc """
-  AssetController
+  FileController
 
   Responsible for serving up static files
   """
@@ -21,7 +21,7 @@ defmodule ServWeb.AssetController do
     end
   end
 
-  def upload(conn, %{"file" => file}) do
+  def create(conn, %{"file" => file}) do
     name = file.filename
     {:ok, file_content} = File.read file.path
 
