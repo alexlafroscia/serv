@@ -16,7 +16,7 @@ defmodule ServWeb.Router do
   scope "/ui", ServWeb do
     pipe_through :browser # Use the default browser stack
 
-    get "/*path", PageController, :index
+    get "/*path", UIController, :index
   end
 
   scope "/api", ServWeb do
@@ -27,7 +27,7 @@ defmodule ServWeb.Router do
   end
 
   scope "/", ServWeb do
-    get "/", PageController, :redirect_to_index
+    get "/", UIController, :redirect_to_index
 
     post "/upload", FileController, :create
     get "/:file_name", FileController, :show

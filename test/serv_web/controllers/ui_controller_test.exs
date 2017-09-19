@@ -1,4 +1,4 @@
-defmodule ServWeb.PageControllerTest do
+defmodule ServWeb.UIControllerTest do
   use ServWeb.ConnCase
 
   test "GET /ui", %{conn: conn} do

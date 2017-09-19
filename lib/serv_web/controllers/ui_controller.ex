@@ -1,5 +1,7 @@
-defmodule ServWeb.PageController do
+defmodule ServWeb.UIController do
   use ServWeb, :controller
+
+  plug :put_view, ServWeb.PageView
 
   def index(conn, _params) do
     render conn, "index.html",
