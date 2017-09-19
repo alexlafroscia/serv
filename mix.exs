@@ -47,7 +47,8 @@ defmodule Serv.Mixfile do
       {:cowboy, "~> 1.0"},
       {:poison, "~> 3.1"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.7", only: :test}
+      {:excoveralls, "~> 0.7", only: :test},
+      {:mock, "~> 0.2.0", only: :test}
     ]
   end
 end
