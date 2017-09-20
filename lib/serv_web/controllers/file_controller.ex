@@ -6,6 +6,8 @@ defmodule ServWeb.FileController do
   """
   use ServWeb, :controller
 
+  plug Serv.Plug.Authenticate when action in [:create]
+
   def show(conn, %{"file_name" => file_name}) do
     instance_id = conn
                   |> fetch_instance_id

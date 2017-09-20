@@ -11,6 +11,7 @@ defmodule ServWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug Serv.Plug.Authenticate
   end
 
   scope "/ui", ServWeb do
