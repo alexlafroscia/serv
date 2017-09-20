@@ -4,6 +4,8 @@ import { Link } from 'preact-router/match';
 import BreadCrumbs from '../components/breadcrumbs';
 import FileUploader from '../components/file-uploader';
 
+import fetch from '../utils/fetch';
+
 export default class extends Component {
   constructor() {
     super();

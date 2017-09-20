@@ -1,5 +1,7 @@
 import { h, Component } from 'preact';
 
+import fetch from '../utils/fetch';
+
 const BACKGROUND_HIGHLIGHT_COLOR = '#ADE1E5';
 
 function stopEvent(event) {

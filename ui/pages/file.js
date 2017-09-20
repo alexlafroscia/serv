@@ -5,6 +5,8 @@ import FileUploader from '../components/file-uploader';
 import ListItem from '../components/list-item';
 import BreadCrumbs from '../components/breadcrumbs';
 
+import fetch from '../utils/fetch';
+
 export default class extends Component {
   constructor() {
     super();

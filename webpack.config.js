@@ -14,6 +14,7 @@ module.exports = {
         test: /\.jsx?/i,
         loader: 'babel-loader',
         options: {
+          babelrc: false,
           presets: [
             [
               'env',
