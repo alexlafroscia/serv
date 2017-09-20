@@ -7,6 +7,11 @@ defmodule ServWeb.APIController do
   """
   use ServWeb, :controller
 
+  def check_authenticated(conn, _params) do
+    conn
+    |> send_resp(:ok, "")
+  end
+
   def index(conn, _params) do
     files = Serv.FileManager.list
     render(conn, ServWeb.FileView, "index.json", files: files)

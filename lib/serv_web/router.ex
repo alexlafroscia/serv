@@ -23,6 +23,7 @@ defmodule ServWeb.Router do
   scope "/api", ServWeb do
     pipe_through :api
 
+    get "/authenticated", APIController, :check_authenticated
     get "/files", APIController, :index
     get "/files/:file_name", APIController, :show
   end

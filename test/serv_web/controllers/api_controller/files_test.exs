@@ -1,4 +1,4 @@
-defmodule ServWeb.APIControllerTest do
+defmodule ServWeb.APIControllerFilesTest do
   use ServWeb.ConnCase
   use Serv.FixtureHelpers
 
