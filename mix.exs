@@ -46,6 +46,8 @@ defmodule Serv.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:poison, "~> 3.1"},
+      {:postgrex, ">= 0.0.0"},
+      {:ecto, "~> 2.1"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.7", only: :test},
       {:mock, "~> 0.2.0", only: :test}
