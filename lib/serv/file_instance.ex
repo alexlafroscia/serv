@@ -5,9 +5,24 @@ defmodule Serv.FileInstance do
   A file instance is a particular version of a file, identified by a hash of the
   contents
   """
+  use Ecto.Schema
+  import Ecto.Changeset
+  alias Serv.FileInstance
 
-  @enforce_keys [:file, :hash]
-  defstruct [:file, :hash]
+  schema "instances" do
+    field :content, :string
+    field :hash, :string
+    belongs_to :file, Serv.File
+
+    timestamps()
+  end
+
+  @doc false
+  def changeset(%FileInstance{} = file_instance, attrs) do
+    file_instance
+    |> cast(attrs, [:content, :hash, :file_id])
+    |> validate_required([:content, :hash, :file_id])
+  end
 
   @doc """
   Creates a new file instance

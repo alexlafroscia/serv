@@ -11,6 +11,7 @@ defmodule Serv.File do
   schema "files" do
     field :extension, :string
     field :name, :string
+    has_many :instances, Serv.FileInstance
 
     timestamps()
   end
