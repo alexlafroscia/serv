@@ -12,6 +12,7 @@ defmodule Serv.File do
     field :extension, :string
     field :name, :string
     has_many :instances, Serv.FileInstance
+    has_many :tags, Serv.FileTag
 
     timestamps()
   end

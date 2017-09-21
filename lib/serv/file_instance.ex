@@ -13,6 +13,8 @@ defmodule Serv.FileInstance do
     field :content, :string
     field :hash, :string
     belongs_to :file, Serv.File
+    has_many :tags, Serv.FileTag,
+      foreign_key: :instance_id
 
     timestamps()
   end
