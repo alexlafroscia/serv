@@ -9,6 +9,8 @@ defmodule Serv.Application do
 
     # Define workers and child supervisors to be supervised
     children = [
+      # Start the Ecto repository
+      supervisor(Serv.Repo, []),
       # Start the endpoint when the application starts
       supervisor(ServWeb.Endpoint, []),
       # Start your own worker by calling: Serv.Worker.start_link(arg1, arg2, arg3)

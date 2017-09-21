@@ -13,6 +13,14 @@ config :serv, ServWeb.Endpoint,
   pubsub: [name: Serv.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
+config :serv, ecto_repos: [Serv.Repo]
+config :serv, Serv.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: "postgres",
+  password: "postgres",
+  database: "serv_assets",
+  hostname: "localhost"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

@@ -6,6 +6,14 @@ config :serv, ServWeb.Endpoint,
   http: [port: 4001],
   server: false
 
+config :serv, Serv.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: "postgres",
+  password: "postgres",
+  database: "serv_assets_test",
+  hostname: "localhost",
+  pool: Ecto.Adapters.SQL.Sandbox
+
 # Print only warnings and errors during test
 config :logger, level: :warn
 
