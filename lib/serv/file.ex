@@ -5,9 +5,15 @@ defmodule Serv.File do
   A file represents a group of file instances, representing the same "logical"
   file. Each instance represents a version of this particular file
   """
+  use Ecto.Schema
+  import Ecto.Changeset
 
-  @enforce_keys [:name, :extension]
-  defstruct [:name, :extension]
+  schema "files" do
+    field :extension, :string
+    field :name, :string
+
+    timestamps()
+  end
 
   @directory Application.get_env(:serv, :data_path)
   @meta_file_name "meta.json"
@@ -38,6 +44,13 @@ defmodule Serv.File do
       :ok -> {:ok, file}
       {:error, reason} -> {:error, reason}
     end
+  end
+
+  @doc false
+  def changeset(%Serv.File{} = file, attrs) do
+    file
+    |> cast(attrs, [:name, :extension])
+    |> validate_required([:name, :extension])
   end
 
   @doc """
