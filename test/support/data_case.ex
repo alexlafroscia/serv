@@ -32,7 +32,45 @@ defmodule Serv.DataCase do
       Ecto.Adapters.SQL.Sandbox.mode(Serv.Repo, {:shared, self()})
     end
 
-    :ok
+    tags =
+      if tags[:with_fixtures] do
+        file = %Serv.File{}
+               |> Serv.File.changeset(%{name: "fixture-a", extension: "txt"})
+               |> Serv.Repo.insert!
+
+        instance = %Serv.FileInstance{}
+                   |> Serv.FileInstance.changeset(%{
+                     file_id: file.id,
+                     hash: "abc",
+                     content: "foo"
+                   })
+                   |> Serv.Repo.insert!
+
+        # Set up the "default" tag for the file
+        %Serv.FileTag{}
+        |> Serv.FileTag.changeset(%{
+          label: "default",
+          file_id: file.id,
+          instance_id: instance.id
+        })
+        |> Serv.Repo.insert!
+
+        # Set up a second file instance
+        %Serv.FileInstance{}
+        |> Serv.FileInstance.changeset(%{
+          file_id: file.id,
+          hash: "def",
+          content: "bar"
+        })
+        |> Serv.Repo.insert!
+
+        tags = Map.put(tags, :s_file, file)
+        Map.put(tags, :instance, instance)
+      else
+        tags
+      end
+
+    tags
   end
 
   @doc """
@@ -49,5 +87,15 @@ defmodule Serv.DataCase do
         String.replace(acc, "%{#{key}}", to_string(value))
       end)
     end)
+  end
+
+  def file_match(first, second) do
+    assert first.name == second.name
+    assert first.extension == second.extension
+  end
+
+  def instance_match(first, second) do
+    assert first.hash == second.hash
+    assert first.content == second.content
   end
 end

@@ -3,24 +3,14 @@ defmodule Serv.FileManager do
   File Management Module
   """
 
+  alias Serv.Repo
   alias Serv.FileInstance
-
-  @directory Application.get_env(:serv, :data_path)
 
   @doc """
   Returns a list of available file objects
   """
   def list do
-    case File.ls(@directory) do
-      {:ok, files} -> files
-        |> Enum.filter(fn(name) ->
-          File.dir? Path.join(@directory, name)
-        end)
-        |> Enum.map(fn(name) ->
-          {name, ext} = parse_filename(name)
-          %Serv.File{name: name, extension: ext}
-        end)
-    end
+    Repo.all(Serv.File)
   end
 
   @doc """
@@ -36,14 +26,13 @@ defmodule Serv.FileManager do
 
   """
   def get_file(name) do
-    full_path = Path.join(@directory, name)
+    {name, ext} = parse_filename(name)
 
-    case File.dir?(full_path) do
-      true ->
-        {name, ext} = parse_filename(name)
-        {:ok, %Serv.File{name: name, extension: ext}}
-      false ->
+    case Repo.get_by(Serv.File, %{name: name, extension: ext}) do
+      file when is_nil(file) ->
         {:error, :not_found}
+      file ->
+        {:ok, file}
     end
   end
 
@@ -61,12 +50,9 @@ defmodule Serv.FileManager do
   end
 
   def create_instance(file, file_content) do
-    case FileInstance.create(file, file_content) do
-      {:ok, instance} ->
-        ensure_default_label(instance)
-      {:error, errors} ->
-        {:error, errors}
-    end
+    {:ok, instance} = FileInstance.create(file, file_content)
+    ensure_default_tag file, instance
+    {:ok, instance}
   end
 
   @doc """
@@ -83,16 +69,6 @@ defmodule Serv.FileManager do
     {basename, String.slice(ext, 1..-1)}
   end
 
-  defp ensure_default_label(instance) do
-    case Serv.File.get(instance.file, "default") do
-      {:ok, _} ->
-        {:ok, instance}
-      {:error, :not_found} ->
-        :ok = Serv.FileInstance.set_label(instance, "default")
-        {:ok, instance}
-    end
-  end
-
   defp validate_name(file_name) do
     if String.contains? file_name, " "  do
       {:error, :invalid_file_name}
@@ -105,6 +81,17 @@ defmodule Serv.FileManager do
     case get_file(file_name) do
       {:ok, found_file} -> {:ok, found_file}
       {:error, :not_found} -> Serv.File.create(file_name)
+    end
+  end
+
+  defp ensure_default_tag(file, instance) do
+    tag = Repo.get_by(Serv.FileTag, %{
+      file_id: file.id,
+      label: "default"
+    })
+
+    unless tag do
+      Serv.FileInstance.set_label(instance, "default")
     end
   end
 end

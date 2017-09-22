@@ -1,6 +1,5 @@
 defmodule ServWeb.APIControllerCheckAuthenticatedTest do
   use ServWeb.ConnCase
-  use Serv.FixtureHelpers
 
   import Mock
 

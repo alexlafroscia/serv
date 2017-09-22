@@ -1,60 +1,24 @@
 defmodule ServFileInstanceTest do
   use ExUnit.Case
-  use Serv.FixtureHelpers
-  doctest Serv.FileInstance
+  use Serv.DataCase
 
-  @fixture_a %Serv.File{
-    name: "fixture-a",
-    extension: "txt"
-  }
-
-  @tag :reset_fixtures
-  test "creating a new instance" do
-    file = @fixture_a
+  @tag with_fixtures: true
+  test "creating a new instance", %{s_file: file} do
     content = "dummy content"
     {:ok, instance} = Serv.FileInstance.create(file, content)
 
-    assert instance.file === file
+    assert instance.file_id === file.id
     assert instance.hash === "90C55A38064627DCA337DFA5FC5BE120"
-
-    written_content = FixtureHelpers.read_file(
-      "fixture-a.txt/90C55A38064627DCA337DFA5FC5BE120/fixture-a.txt"
-    )
-    assert written_content === content
-
-    gzip_written_content = FixtureHelpers.read_file(
-      "fixture-a.txt/90C55A38064627DCA337DFA5FC5BE120/fixture-a.txt.gz"
-    )
-    assert is_binary(gzip_written_content)
   end
 
-  test "getting the gzipped content of a file" do
-    instance = %Serv.FileInstance{
-      file: @fixture_a,
-      hash: "abc"
-    }
-    content = Serv.FileInstance.get_content(instance, :gzip)
+  @tag :skip
+  test "getting the gzipped content of a file"
 
-    assert is_binary(content)
-  end
+  @tag with_fixtures: true
+  test "setting a label for a file instance", %{instance: instance} do
+    {:ok, tag} = Serv.FileInstance.set_label(instance, "new-label")
 
-  @tag :reset_fixtures
-  test "setting a label for a file instance" do
-    instance = %Serv.FileInstance{
-      file: @fixture_a,
-      hash: "abc"
-    }
-
-    :ok = Serv.FileInstance.set_label(instance, "new-label")
-
-    meta_content = FixtureHelpers.read_file(
-      "fixture-a.txt/meta.json"
-    )
-    assert Poison.Parser.parse(meta_content) == {:ok, %{
-      "labels" => %{
-        "default" => "abc",
-        "new-label" => "abc"
-      }
-    }}
+    assert tag.file_id == instance.file_id
+    assert tag.instance_id == instance.id
   end
 end

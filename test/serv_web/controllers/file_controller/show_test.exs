@@ -1,7 +1,8 @@
 defmodule ServWeb.FileControllerShowTest do
+  use Serv.DataCase
   use ServWeb.ConnCase
-  use Serv.FixtureHelpers
 
+  @tag with_fixtures: true
   test "can return the content of a file", %{conn: conn} do
     conn = conn
            |> Plug.Conn.put_req_header("accept-encoding", "")
@@ -9,52 +10,57 @@ defmodule ServWeb.FileControllerShowTest do
 
     assert conn.state == :sent
     assert conn.status == 200
-    assert conn.resp_body == "file content\n"
+    assert conn.resp_body == "foo"
 
     assert Plug.Conn.get_resp_header(conn, "content-type") == [
       "text/plain; charset=utf-8"
     ]
   end
 
+  @tag with_fixtures: true
   test "returns the default file when version is not specified", %{conn: conn} do
-    conn = get conn, "/fixture-b.min.js"
+    conn = get conn, "/fixture-a.txt"
 
     assert conn.state == :sent
     assert conn.status == 200
-    assert conn.resp_body == "def\n"
+    assert conn.resp_body == "foo"
+    assert Plug.Conn.get_resp_header(conn, "etag") == ["\"abc\""]
+  end
+
+  @tag with_fixtures: true
+  test "can specify instance ID as a query param", %{conn: conn} do
+    conn = get conn, "/fixture-a.txt?def"
+
+    assert conn.state == :sent
+    assert conn.status == 200
+    assert conn.resp_body == "bar"
     assert Plug.Conn.get_resp_header(conn, "etag") == ["\"def\""]
   end
 
-  test "can specify instance ID as a query param", %{conn: conn} do
-    conn = get conn, "/fixture-b.min.js?abc"
-
-    assert conn.state == :sent
-    assert conn.status == 200
-    assert conn.resp_body == "abc\n"
-    assert Plug.Conn.get_resp_header(conn, "etag") == ["\"abc\""]
-  end
-
+  @tag with_fixtures: true
   test "can specify instance ID as an HTTP header", %{conn: conn} do
     conn = conn
-           |> Plug.Conn.put_req_header("serv-instance-id", "abc")
-           |> get("/fixture-b.min.js")
+           |> Plug.Conn.put_req_header("serv-instance-id", "def")
+           |> get("/fixture-a.txt")
 
     assert conn.state == :sent
     assert conn.status == 200
-    assert conn.resp_body == "abc\n"
-    assert Plug.Conn.get_resp_header(conn, "etag") == ["\"abc\""]
+    assert conn.resp_body == "bar"
+    assert Plug.Conn.get_resp_header(conn, "etag") == ["\"def\""]
   end
 
+  @tag with_fixtures: true
   test "responds with a \"not modified\" if the file has already been requested", %{conn: conn} do
     conn = conn
-           |> Plug.Conn.put_req_header("if-none-match", "\"def\"")
-           |> get("/fixture-b.min.js")
+           |> Plug.Conn.put_req_header("if-none-match", "\"abc\"")
+           |> get("/fixture-a.txt")
 
     assert conn.state == :sent
     assert conn.status == 304
     assert conn.resp_body == ""
   end
 
+  @tag :skip
   test "can return a GZIP of a file", %{conn: conn} do
     conn = conn
            |> Plug.Conn.put_req_header("accept-encoding", "gzip")
@@ -73,12 +79,13 @@ defmodule ServWeb.FileControllerShowTest do
     assert encoding == ["gzip"]
   end
 
+  @tag with_fixtures: true
   test "it works for requests without an `accept-encoding` header", %{conn: conn} do
     conn = get conn, "/fixture-a.txt"
 
     assert conn.state == :sent
     assert conn.status == 200
-    assert conn.resp_body == "file content\n"
+    assert conn.resp_body == "foo"
 
     assert Plug.Conn.get_resp_header(conn, "content-type") == [
       "text/plain; charset=utf-8"

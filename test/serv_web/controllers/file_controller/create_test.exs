@@ -1,11 +1,11 @@
 defmodule ServWeb.FileControllerCreateTest do
+  use Serv.DataCase
   use ServWeb.ConnCase
-  use Serv.FixtureHelpers
 
   test "can upload a new file without authentication", %{conn: conn} do
     file_name = "upload-file.txt"
     upload = %Plug.Upload{
-      path: Path.join(Serv.FixtureHelpers.upload_fixture_dir(), file_name),
+      path: Path.join(Serv.FixtureHelpers.fixture_dir, file_name),
       filename: file_name
     }
     conn = conn

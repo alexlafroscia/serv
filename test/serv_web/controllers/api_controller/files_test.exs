@@ -1,6 +1,6 @@
 defmodule ServWeb.APIControllerFilesTest do
   use ServWeb.ConnCase
-  use Serv.FixtureHelpers
+  use Serv.DataCase
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
@@ -16,22 +16,6 @@ defmodule ServWeb.APIControllerFilesTest do
     "relationships" => %{
       "instances" => %{
         "data" => [
-          %{"type" => "instance", "id" => "abc"}
-        ]
-      }
-    }
-  }
-
-  @fixture_b %{
-    "id" => "fixture-b.min.js",
-    "type" => "file",
-    "attributes" => %{
-      "name" => "fixture-b.min",
-      "extension" => "js"
-    },
-    "relationships" => %{
-      "instances" => %{
-        "data" => [
           %{"type" => "instance", "id" => "abc"},
           %{"type" => "instance", "id" => "def"}
         ]
@@ -39,20 +23,22 @@ defmodule ServWeb.APIControllerFilesTest do
     }
   }
 
+  @tag with_fixtures: true
   test "lists all entries on index", %{conn: conn} do
     conn = get conn, api_path(conn, :index)
     data = json_response(conn, 200)["data"]
 
     assert Enum.member?(data, @fixture_a)
-    assert Enum.member?(data, @fixture_b)
   end
 
+  @tag with_fixtures: true
   test "shows chosen resource", %{conn: conn} do
     conn = get conn, "/api/files/fixture-a.txt"
 
     assert json_response(conn, 200)["data"] == @fixture_a
   end
 
+  @tag with_fixtures: true
   test "includes instances in response when requested", %{conn: conn} do
     conn = get conn, "/api/files/fixture-a.txt?include=instances"
 
@@ -61,10 +47,15 @@ defmodule ServWeb.APIControllerFilesTest do
       %{
         "type" => "instance",
         "id" => "abc"
+      },
+      %{
+        "type" => "instance",
+        "id" => "def"
       }
     ]
   end
 
+  @tag with_fixtures: true
   test "renders page not found when id is nonexistent", %{conn: conn} do
     conn = get conn, "/api/files/some-unknown-file.txt"
 

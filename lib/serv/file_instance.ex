@@ -8,6 +8,7 @@ defmodule Serv.FileInstance do
   use Ecto.Schema
   import Ecto.Changeset
   alias Serv.FileInstance
+  alias Serv.Repo
 
   schema "instances" do
     field :content, :string
@@ -30,17 +31,15 @@ defmodule Serv.FileInstance do
   Creates a new file instance
   """
   def create(file, file_content) do
-    hash = calculate_hash(file_content)
-    instance = %Serv.FileInstance{file: file, hash: hash}
+    hash = calculate_hash file_content
 
-    directory = file
-                |> Serv.File.storage_directory
-                |> Path.join(hash)
+    new_instance = changeset %FileInstance{}, %{
+      hash: hash,
+      content: file_content,
+      file_id: file.id
+    }
 
-    case File.mkdir_p(directory) do
-      :ok -> write_content(instance, file_content)
-      {:error, reason} -> {:error, reason}
-    end
+    Repo.insert new_instance
   end
 
   @doc """
@@ -60,19 +59,8 @@ defmodule Serv.FileInstance do
 
   """
   def get_content(instance, version \\ :original) do
-    file_name = Serv.File.file_name(instance.file)
-    path = instance
-           |> location_for
-           |> Path.join(file_name)
-
-    path =
-      case version do
-        :original -> path
-        :gzip -> [path, "gz"] |> Enum.join(".")
-      end
-
-    case File.read(path) do
-      {:ok, content} -> to_string(content)
+    case version do
+      :original -> instance.content
     end
   end
 
@@ -80,59 +68,17 @@ defmodule Serv.FileInstance do
   Add a label for the current instance
   """
   def set_label(instance, label) do
-    {:ok, meta} = Serv.File.get_metadata(instance.file)
-
-    labels = meta["labels"] |> Map.put(label, instance.hash)
-    updated_meta = meta |> Map.put("labels", labels)
-
-    Serv.File.set_metadata(instance.file, updated_meta)
-  end
-
-  defp location_for(instance) do
-    file_store = instance.file |> Serv.File.storage_directory
-
-    file_store
-    |> Path.join(instance.hash)
+    %Serv.FileTag{}
+    |> Serv.FileTag.changeset(%{
+      label: label,
+      file_id: instance.file_id,
+      instance_id: instance.id
+    })
+    |> Repo.insert
   end
 
   defp calculate_hash(content) do
     hash = :crypto.hash(:md5, content)
     Base.encode16(hash)
-  end
-
-  defp write_content(instance, content) do
-    file_name = instance.file |> Serv.File.file_name
-    full_path = instance
-                |> location_for
-                |> Path.join(file_name)
-
-    results = Task.yield_many([
-      write_original_content(full_path, content),
-      write_gzip_content(full_path, content)
-    ], 5000)
-
-    # Get just the results from the tasks
-    results = results
-              |> Enum.map(fn({_, result}) -> result end)
-              |> Enum.map(fn({:ok, result}) -> result end)
-
-    case results do
-      [:ok, :ok] -> {:ok, instance}
-      errors -> errors
-    end
-  end
-
-  defp write_original_content(path, content) do
-    Task.async(fn ->
-      File.write(path, content)
-    end)
-  end
-
-  defp write_gzip_content(path, content) do
-    path = [path, 'gz'] |> Enum.join(".")
-
-    Task.async(fn ->
-      File.write(path, content, [:compressed])
-    end)
   end
 end

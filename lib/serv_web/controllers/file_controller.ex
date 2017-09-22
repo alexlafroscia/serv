@@ -37,10 +37,6 @@ defmodule ServWeb.FileController do
         |> put_status(:bad_request)
         |> text("")
     end
-
-    conn
-    |> put_status(:created)
-    |> text("")
   end
 
   defp render_content(conn, file, instance_id) do
