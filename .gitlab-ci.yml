@@ -1,5 +1,14 @@
 image: elixir:1.5.1
 
+services:
+  - postgres:latest
+
+variables:
+  POSTGRES_HOST: "postgres"
+  POSTGRES_USER: runner
+  POSTGRES_PASSWORD: ""
+  MIX_ENV: test
+
 before_script:
   - mix local.hex --force
   - mix local.rebar --force
@@ -9,4 +18,7 @@ lint:
   script: mix credo
 
 coverage:
-  script: mix coveralls
+  script:
+    - mix ecto.create
+    - mix ecto.migrate
+    - mix coveralls

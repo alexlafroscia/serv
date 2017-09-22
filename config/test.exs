@@ -8,10 +8,10 @@ config :serv, ServWeb.Endpoint,
 
 config :serv, Serv.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
   database: "serv_assets_test",
-  hostname: "localhost",
+  username: System.get_env("POSTGRES_USER") || "postgres",
+  password: System.get_env("POSTGRES_PASSWORD") || "postgres",
+  hostname: System.get_env("POSTGRES_HOST") || "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
 # Print only warnings and errors during test
