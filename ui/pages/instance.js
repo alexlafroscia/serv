@@ -5,6 +5,7 @@ import BreadCrumbs from '../components/breadcrumbs';
 import FileUploader from '../components/file-uploader';
 
 import fetch from '../utils/fetch';
+import formatDate from '../utils/format-date';
 
 export default class extends Component {
   constructor() {
@@ -31,7 +32,7 @@ export default class extends Component {
       });
   }
 
-  render({ fileName, instanceId }) {
+  render({ fileName, instanceId }, { instance }) {
     return (
       <FileUploader>
         <div
@@ -47,6 +48,26 @@ export default class extends Component {
             <Link href={`/ui/${fileName}`}>{fileName}</Link>
             {instanceId}
           </BreadCrumbs>
+
+          {instance.attributes ? (
+            <div class="well">
+              <div class="container-fluid">
+                <div class="row">
+                  <div
+                    class="col-xs-12 col-sm-2"
+                    style={{ fontWeight: 'bold' }}
+                  >
+                    Uploaded:
+                  </div>
+                  <div class="col-xs-12 col-sm-10">
+                    {formatDate(instance.attributes['uploaded-at'])}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            undefined
+          )}
 
           <iframe
             style={{ flexGrow: '1', marginBottom: '1em', width: '100%' }}

@@ -6,6 +6,7 @@ import ListItem from '../components/list-item';
 import BreadCrumbs from '../components/breadcrumbs';
 
 import fetch from '../utils/fetch';
+import formatDate from '../utils/format-date';
 
 export default class extends Component {
   constructor() {
@@ -42,6 +43,7 @@ export default class extends Component {
           {instances.map(instance => (
             <ListItem
               title={instance.id}
+              detailText={formatDate(instance.attributes['uploaded-at'])}
               linkHref={`/ui/${fileName}/${instance.id}`}
               fileHref={`/${fileName}?${instance.id}`}
             />
