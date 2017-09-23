@@ -82,7 +82,8 @@ defmodule ServWeb.FileController do
       end
 
     case Enum.member?(values, "gzip") do
-      true -> :gzip
+      # true -> :gzip
+      true -> :original
       false -> :original
     end
   end
