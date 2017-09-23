@@ -5,7 +5,10 @@ defmodule ServWeb.InstanceView do
   def render("instance.json", %{instance: instance}) do
     %{
       id: instance.hash,
-      type: "instance"
+      type: "instance",
+      attributes: %{
+        "uploaded-at": instance.inserted_at
+      }
     }
   end
 

@@ -39,18 +39,24 @@ defmodule ServWeb.APIControllerFilesTest do
   end
 
   @tag with_fixtures: true
-  test "includes instances in response when requested", %{conn: conn} do
+  test "includes instances in response when requested", %{conn: conn, instance: instance, instance_2: instance_2} do
     conn = get conn, "/api/files/fixture-a.txt?include=instances"
 
     assert json_response(conn, 200)["data"] == @fixture_a
     assert json_response(conn, 200)["included"] == [
       %{
         "type" => "instance",
-        "id" => "abc"
+        "id" => "abc",
+        "attributes" => %{
+          "uploaded-at" => instance.inserted_at |> NaiveDateTime.to_iso8601
+        }
       },
       %{
         "type" => "instance",
-        "id" => "def"
+        "id" => "def",
+        "attributes" => %{
+          "uploaded-at" => instance_2.inserted_at |> NaiveDateTime.to_iso8601
+        }
       }
     ]
   end

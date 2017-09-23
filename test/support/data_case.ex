@@ -56,7 +56,7 @@ defmodule Serv.DataCase do
         |> Serv.Repo.insert!
 
         # Set up a second file instance
-        %Serv.FileInstance{}
+        instance_2 = %Serv.FileInstance{}
         |> Serv.FileInstance.changeset(%{
           file_id: file.id,
           hash: "def",
@@ -64,8 +64,10 @@ defmodule Serv.DataCase do
         })
         |> Serv.Repo.insert!
 
-        tags = Map.put(tags, :s_file, file)
-        Map.put(tags, :instance, instance)
+        tags
+        |> Map.put(:s_file, file)
+        |> Map.put(:instance, instance)
+        |> Map.put(:instance_2, instance_2)
       else
         tags
       end
