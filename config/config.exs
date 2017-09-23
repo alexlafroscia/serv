@@ -16,10 +16,10 @@ config :serv, ServWeb.Endpoint,
 config :serv, ecto_repos: [Serv.Repo]
 config :serv, Serv.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
   database: "serv_assets",
-  hostname: "localhost"
+  username: System.get_env("POSTGRES_USER") || "postgres",
+  password: System.get_env("POSTGRES_PASSWORD") || "postgres",
+  hostname: System.get_env("POSTGRES_HOST") || "localhost"
 
 # Configures Elixir's Logger
 config :logger, :console,
