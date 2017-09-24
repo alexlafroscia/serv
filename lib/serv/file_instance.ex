@@ -44,19 +44,6 @@ defmodule Serv.FileInstance do
 
   @doc """
   Get the contents of a file instance
-
-  ## Examples
-
-    iex> file = %Serv.File{name: "fixture-a", extension: "txt"}
-    iex> {:ok, instance} = Serv.File.get(file, "abc")
-    iex> Serv.FileInstance.get_content(instance)
-    "file content\\n"
-
-    iex> file = %Serv.File{name: "fixture-a", extension: "txt"}
-    iex> {:ok, instance} = Serv.File.get(file, "abc")
-    iex> Serv.FileInstance.get_content(instance, :original)
-    "file content\\n"
-
   """
   def get_content(instance, version \\ :original) do
     case version do

@@ -15,6 +15,11 @@ defmodule ServFileInstanceTest do
   test "getting the gzipped content of a file"
 
   @tag with_fixtures: true
+  test "getting the content for a file", %{instance: instance} do
+    assert Serv.FileInstance.get_content(instance) === "foo"
+  end
+
+  @tag with_fixtures: true
   test "setting a label for a file instance", %{instance: instance} do
     {:ok, tag} = Serv.FileInstance.set_label(instance, "new-label")
 
