@@ -14,8 +14,7 @@ defmodule ServFileManagerTest do
     {:ok, instance} = Serv.FileManager.create_instance("fixture-a.txt", file_content)
 
     instance_match(instance, %Serv.FileInstance{
-      hash: "D10B4C3FF123B26DC068D43A8BEF2D23",
-      content: file_content
+      hash: "D10B4C3FF123B26DC068D43A8BEF2D23"
     })
   end
 
@@ -25,8 +24,7 @@ defmodule ServFileManagerTest do
     {:ok, instance} = Serv.FileManager.create_instance(file, file_content)
 
     instance_match(instance, %Serv.FileInstance{
-      hash: "D10B4C3FF123B26DC068D43A8BEF2D23",
-      content: file_content
+      hash: "D10B4C3FF123B26DC068D43A8BEF2D23"
     })
   end
 
@@ -39,8 +37,7 @@ defmodule ServFileManagerTest do
     )
 
     instance_match(instance, %Serv.FileInstance{
-      hash: "D10B4C3FF123B26DC068D43A8BEF2D23",
-      content: file_content
+      hash: "D10B4C3FF123B26DC068D43A8BEF2D23"
     })
 
     assert instance.file_id

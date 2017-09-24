@@ -7,11 +7,11 @@ defmodule Serv.FileInstance do
   """
   use Ecto.Schema
   import Ecto.Changeset
+  alias Serv.FileContent
   alias Serv.FileInstance
   alias Serv.Repo
 
   schema "instances" do
-    field :content, :string
     field :hash, :string
     belongs_to :file, Serv.File
     has_many :tags, Serv.FileTag,
@@ -23,8 +23,8 @@ defmodule Serv.FileInstance do
   @doc false
   def changeset(%FileInstance{} = file_instance, attrs) do
     file_instance
-    |> cast(attrs, [:content, :hash, :file_id])
-    |> validate_required([:content, :hash, :file_id])
+    |> cast(attrs, [:hash, :file_id])
+    |> validate_required([:hash, :file_id])
   end
 
   @doc """
@@ -35,19 +35,38 @@ defmodule Serv.FileInstance do
 
     new_instance = changeset %FileInstance{}, %{
       hash: hash,
-      content: file_content,
       file_id: file.id
     }
 
-    Repo.insert new_instance
+    with {:ok, instance} <- Repo.insert(new_instance),
+         {:ok, _} <- %FileContent{}
+                                    |> FileContent.changeset(%{
+                                      type: "original",
+                                      instance_id: instance.id,
+                                      file_id: file.id,
+                                      content: file_content
+                                    })
+                                    |> Repo.insert
+    do
+      {:ok, instance}
+    end
   end
 
   @doc """
   Get the contents of a file instance
   """
-  def get_content(instance, version \\ :original) do
-    case version do
-      :original -> instance.content
+  def get_content(instance), do: get_content(instance, :original)
+  def get_content(instance, :original) do
+    file_content = Repo.get_by(FileContent, %{
+      type: "original",
+      file_id: instance.file_id,
+      instance_id: instance.id
+    })
+
+    if is_nil(file_content) do
+      nil
+    else
+      file_content.content
     end
   end
 

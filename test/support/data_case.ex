@@ -41,10 +41,18 @@ defmodule Serv.DataCase do
         instance = %Serv.FileInstance{}
                    |> Serv.FileInstance.changeset(%{
                      file_id: file.id,
-                     hash: "abc",
-                     content: "foo"
+                     hash: "abc"
                    })
                    |> Serv.Repo.insert!
+
+        %Serv.FileContent{}
+        |> Serv.FileContent.changeset(%{
+          type: "original",
+          content: "foo",
+          file_id: file.id,
+          instance_id: instance.id
+        })
+        |> Serv.Repo.insert!
 
         # Set up the "default" tag for the file
         %Serv.FileTag{}
@@ -59,8 +67,16 @@ defmodule Serv.DataCase do
         instance_2 = %Serv.FileInstance{}
         |> Serv.FileInstance.changeset(%{
           file_id: file.id,
-          hash: "def",
-          content: "bar"
+          hash: "def"
+        })
+        |> Serv.Repo.insert!
+
+        %Serv.FileContent{}
+        |> Serv.FileContent.changeset(%{
+          type: "original",
+          content: "bar",
+          file_id: file.id,
+          instance_id: instance_2.id
         })
         |> Serv.Repo.insert!
 
@@ -98,6 +114,5 @@ defmodule Serv.DataCase do
 
   def instance_match(first, second) do
     assert first.hash == second.hash
-    assert first.content == second.content
   end
 end

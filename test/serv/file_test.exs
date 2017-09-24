@@ -19,12 +19,10 @@ defmodule ServFileTest do
     first = Enum.at(instances, 0)
 
     assert first.hash == "abc"
-    assert first.content == "foo"
     assert first.file_id == file.id
 
     second = Enum.at(instances, 1)
     assert second.hash == "def"
-    assert second.content == "bar"
     assert second.file_id == file.id
   end
 
@@ -33,7 +31,6 @@ defmodule ServFileTest do
     {:ok, instance} = Serv.File.get(file, "abc")
 
     assert instance.hash == "abc"
-    assert instance.content == "foo"
     assert instance.file_id == file.id
   end
 
