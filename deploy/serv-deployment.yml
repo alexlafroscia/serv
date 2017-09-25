@@ -1,7 +1,7 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: serv-deployment
+  name: serv
 spec:
   replicas: 1
   template:
@@ -10,7 +10,45 @@ spec:
         app: serv
     spec:
       containers:
-      - name: serv
-        image: gcr.io/serv-179106/serv:a4c8bbd85bad45927a86b216d91d6404b6cf79c5
-        ports:
-        - containerPort: 4000
+        - name: serv
+          image: gcr.io/serv-179106/serv:c8d4149b4971636d2b86333cef6dc5c0bf73b631
+          ports:
+            - containerPort: 4000
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: password
+            - name: SERV_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: serv-admin-password
+                  key: password
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.09
+          command: ["/cloud_sql_proxy", "--dir=/cloudsql",
+                    "-instances=serv-179106:us-central1:serv-assets=tcp:5432",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs
+            - name: cloudsql
+              mountPath: /cloudsql
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+        - name: ssl-certs
+          hostPath:
+            path: /etc/ssl/certs
+        - name: cloudsql
+          emptyDir:
