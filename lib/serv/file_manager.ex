@@ -2,9 +2,12 @@ defmodule Serv.FileManager do
   @moduledoc """
   File Management Module
   """
+  import Ecto.Query, only: [from: 2]
 
   alias Serv.Repo
+  alias Serv.FileContent
   alias Serv.FileInstance
+  alias Serv.FileTag
 
   @doc """
   Returns a list of available file objects
@@ -34,6 +37,59 @@ defmodule Serv.FileManager do
       file ->
         {:ok, file}
     end
+  end
+
+  @doc """
+  Get a File, FileInstance and FileContent based on the file name, identifier and
+  encoding
+
+  Essentially, this method turns the params given in an request for a file and
+  turns them into the data required for the response
+  """
+  def get_file_content(file_name, identifier, content_encoding) do
+    {name, ext} = parse_filename(file_name)
+    encoding = Atom.to_string(content_encoding)
+
+    file_query = from f in Serv.File,
+      where: f.name == ^name and f.extension == ^ext
+
+    tag_content = file_query
+                  |> get_file_content_by_tag(identifier, encoding)
+                  |> Repo.one
+
+    if tag_content do
+      tag_content
+    else
+      instance_content = file_query
+                         |> get_file_content_by_hash(identifier, encoding)
+                         |> Repo.one
+
+      if instance_content do
+        instance_content
+      else
+        nil
+      end
+    end
+  end
+
+  defp get_file_content_by_tag(file_query, label, encoding) do
+    from f in file_query,
+      join: t in FileTag,
+        where: t.label == ^label,
+        join: i in FileInstance,
+          where: t.instance_id == i.id and i.file_id == f.id,
+          join: c in FileContent,
+            where: c.instance_id == i.id and c.file_id == f.id and c.type == ^encoding,
+      select: [f, i, c]
+  end
+
+  defp get_file_content_by_hash(file_query, hash, encoding) do
+    from f in file_query,
+      join: i in FileInstance,
+        where: i.hash == ^hash and i.file_id == f.id,
+        join: c in FileContent,
+          where: c.instance_id == i.id and c.file_id == f.id and c.type == ^encoding,
+      select: [f, i, c]
   end
 
   @doc """
