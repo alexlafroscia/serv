@@ -43,7 +43,11 @@ defmodule ServWeb.APIController do
     else
       conn
       |> put_status(:not_found)
-      |> render(ServWeb.ErrorView, "404.json", %{})
+      |> render(ServWeb.ErrorView, "404.json", %{errors: [
+           %{
+             message: "Not found"
+           }
+         ]})
     end
   end
 end

@@ -26,6 +26,8 @@ defmodule ServWeb.Router do
     get "/authenticated", APIController, :check_authenticated
     get "/files", APIController, :index
     get "/files/:file_id", APIController, :show
+
+    patch "/tags/:tag_id/relationships/instance", APITagController, :update_instance
   end
 
   scope "/", ServWeb do

@@ -10,19 +10,16 @@ defmodule ServWeb.ErrorView do
     "Internal server error"
   end
 
-  def render("404.json", _assigns) do
+  def render("404.json", assigns), do: error_json(assigns)
+  def render("500.json", assigns), do: error_json(assigns)
+
+  defp error_json(%{errors: errors}) do
     %{
-      errors: [
-
-      ]
-    }
-  end
-
-  def render("500.json", _assigns) do
-    %{
-      errors: [
-
-      ]
+      errors: Enum.map(errors, fn(error) ->
+        %{
+          detail: error.message
+        }
+      end)
     }
   end
 
