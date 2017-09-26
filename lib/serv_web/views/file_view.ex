@@ -30,8 +30,8 @@ defmodule ServWeb.FileView do
 
   def render("file.json", %{file: file}) do
     %{
-      id: Serv.File.file_name(file),
-      type: "file",
+      id: file.id,
+      type: "files",
       attributes: %{
         name: file.name,
         extension: file.extension

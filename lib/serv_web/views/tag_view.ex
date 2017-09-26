@@ -5,7 +5,7 @@ defmodule ServWeb.TagView do
   def render("tag.json", %{tag: tag}) do
     %{
       id: tag.id,
-      type: "tag",
+      type: "tags",
       attributes: %{
         "label": tag.label,
         "created-at": tag.inserted_at,
@@ -16,7 +16,7 @@ defmodule ServWeb.TagView do
 
   def render("as-relationship", %{tags: tags}) do
     tag_json = Enum.map(tags, fn(tag) ->
-      %{type: "tag", id: tag.id}
+      %{type: "tags", id: tag.id}
     end)
 
     %{data: tag_json}

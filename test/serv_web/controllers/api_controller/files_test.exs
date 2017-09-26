@@ -6,10 +6,14 @@ defmodule ServWeb.APIControllerFilesTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  defp fixture_a(tag_id) do
-    %{
-      "id" => "fixture-a.txt",
-      "type" => "file",
+  @tag with_fixtures: true
+  test "lists all entries on index", %{conn: conn, s_file: file, instance: instance, instance_2: instance_2, tag: tag} do
+    conn = get conn, api_path(conn, :index)
+    data = json_response(conn, 200)["data"]
+
+    assert Enum.member?(data, %{
+      "id" => file.id,
+      "type" => "files",
       "attributes" => %{
         "name" => "fixture-a",
         "extension" => "txt"
@@ -17,13 +21,40 @@ defmodule ServWeb.APIControllerFilesTest do
       "relationships" => %{
         "instances" => %{
           "data" => [
-            %{"type" => "instance", "id" => "abc"},
-            %{"type" => "instance", "id" => "def"}
+            %{"type" => "instances", "id" => instance.id},
+            %{"type" => "instances", "id" => instance_2.id}
           ]
         },
         "tags" => %{
           "data" => [
-            %{"type" => "tag", "id" => tag_id}
+            %{"type" => "tags", "id" => tag.id}
+          ]
+        }
+      }
+    })
+  end
+
+  @tag with_fixtures: true
+  test "shows chosen resource", %{conn: conn, s_file: file, instance: instance, instance_2: instance_2, tag: tag} do
+    conn = get conn, "/api/files/#{file.id}"
+
+    assert json_response(conn, 200)["data"] == %{
+      "id" => file.id,
+      "type" => "files",
+      "attributes" => %{
+        "name" => "fixture-a",
+        "extension" => "txt"
+      },
+      "relationships" => %{
+        "instances" => %{
+          "data" => [
+            %{"type" => "instances", "id" => instance.id},
+            %{"type" => "instances", "id" => instance_2.id}
+          ]
+        },
+        "tags" => %{
+          "data" => [
+            %{"type" => "tags", "id" => tag.id}
           ]
         }
       }
@@ -31,51 +62,78 @@ defmodule ServWeb.APIControllerFilesTest do
   end
 
   @tag with_fixtures: true
-  test "lists all entries on index", %{conn: conn, tag: tag} do
-    conn = get conn, api_path(conn, :index)
-    data = json_response(conn, 200)["data"]
+  test "includes instances in response when requested", %{conn: conn, s_file: file, instance: instance, instance_2: instance_2, tag: tag} do
+    conn = get conn, "/api/files/#{file.id}?include=instances"
 
-    assert Enum.member?(data, fixture_a tag.id)
-  end
-
-  @tag with_fixtures: true
-  test "shows chosen resource", %{conn: conn, tag: tag} do
-    conn = get conn, "/api/files/fixture-a.txt"
-
-    assert json_response(conn, 200)["data"] == fixture_a tag.id
-  end
-
-  @tag with_fixtures: true
-  test "includes instances in response when requested", %{conn: conn, instance: instance, instance_2: instance_2, tag: tag} do
-    conn = get conn, "/api/files/fixture-a.txt?include=instances"
-
-    assert json_response(conn, 200)["data"] == fixture_a tag.id
+    assert json_response(conn, 200)["data"] == %{
+      "id" => file.id,
+      "type" => "files",
+      "attributes" => %{
+        "name" => "fixture-a",
+        "extension" => "txt"
+      },
+      "relationships" => %{
+        "instances" => %{
+          "data" => [
+            %{"type" => "instances", "id" => instance.id},
+            %{"type" => "instances", "id" => instance_2.id}
+          ]
+        },
+        "tags" => %{
+          "data" => [
+            %{"type" => "tags", "id" => tag.id}
+          ]
+        }
+      }
+    }
     assert json_response(conn, 200)["included"] == [
       %{
-        "type" => "instance",
-        "id" => "abc",
+        "type" => "instances",
+        "id" => instance.id,
         "attributes" => %{
-          "uploaded-at" => instance.inserted_at |> NaiveDateTime.to_iso8601
+          "hash" => instance.hash,
+          "created-at" => instance.inserted_at |> NaiveDateTime.to_iso8601
         }
       },
       %{
-        "type" => "instance",
-        "id" => "def",
+        "type" => "instances",
+        "id" => instance_2.id,
         "attributes" => %{
-          "uploaded-at" => instance_2.inserted_at |> NaiveDateTime.to_iso8601
+          "hash" => instance_2.hash,
+          "created-at" => instance_2.inserted_at |> NaiveDateTime.to_iso8601
         }
       }
     ]
   end
 
   @tag with_fixtures: true
-  test "includes tags in response when requested", %{conn: conn, tag: tag} do
-    conn = get conn, "/api/files/fixture-a.txt?include=tags"
+  test "includes tags in response when requested", %{conn: conn, s_file: file, instance: instance, instance_2: instance_2, tag: tag} do
+    conn = get conn, "/api/files/#{file.id}?include=tags"
 
-    assert json_response(conn, 200)["data"] == fixture_a tag.id
+    assert json_response(conn, 200)["data"] == %{
+      "id" => file.id,
+      "type" => "files",
+      "attributes" => %{
+        "name" => "fixture-a",
+        "extension" => "txt"
+      },
+      "relationships" => %{
+        "instances" => %{
+          "data" => [
+            %{"type" => "instances", "id" => instance.id},
+            %{"type" => "instances", "id" => instance_2.id}
+          ]
+        },
+        "tags" => %{
+          "data" => [
+            %{"type" => "tags", "id" => tag.id}
+          ]
+        }
+      }
+    }
     assert json_response(conn, 200)["included"] == [
       %{
-        "type" => "tag",
+        "type" => "tags",
         "id" => tag.id,
         "attributes" => %{
           "label" => tag.label,
@@ -87,27 +145,49 @@ defmodule ServWeb.APIControllerFilesTest do
   end
 
   @tag with_fixtures: true
-  test "includes instances and tags in response when requested", %{conn: conn, instance: instance, instance_2: instance_2, tag: tag} do
-    conn = get conn, "/api/files/fixture-a.txt?include=instances,tags"
+  test "includes instances and tags in response when requested", %{conn: conn, s_file: file, instance: instance, instance_2: instance_2, tag: tag} do
+    conn = get conn, "/api/files/#{file.id}?include=instances,tags"
 
-    assert json_response(conn, 200)["data"] == fixture_a tag.id
+    assert json_response(conn, 200)["data"] == %{
+      "id" => file.id,
+      "type" => "files",
+      "attributes" => %{
+        "name" => "fixture-a",
+        "extension" => "txt"
+      },
+      "relationships" => %{
+        "instances" => %{
+          "data" => [
+            %{"type" => "instances", "id" => instance.id},
+            %{"type" => "instances", "id" => instance_2.id}
+          ]
+        },
+        "tags" => %{
+          "data" => [
+            %{"type" => "tags", "id" => tag.id}
+          ]
+        }
+      }
+    }
     assert json_response(conn, 200)["included"] == [
       %{
-        "type" => "instance",
-        "id" => "abc",
+        "type" => "instances",
+        "id" => instance.id,
         "attributes" => %{
-          "uploaded-at" => instance.inserted_at |> NaiveDateTime.to_iso8601
+          "hash" => instance.hash,
+          "created-at" => instance.inserted_at |> NaiveDateTime.to_iso8601
         }
       },
       %{
-        "type" => "instance",
-        "id" => "def",
+        "type" => "instances",
+        "id" => instance_2.id,
         "attributes" => %{
-          "uploaded-at" => instance_2.inserted_at |> NaiveDateTime.to_iso8601
+          "hash" => instance_2.hash,
+          "created-at" => instance_2.inserted_at |> NaiveDateTime.to_iso8601
         }
       },
       %{
-        "type" => "tag",
+        "type" => "tags",
         "id" => tag.id,
         "attributes" => %{
           "label" => tag.label,
@@ -118,9 +198,8 @@ defmodule ServWeb.APIControllerFilesTest do
     ]
   end
 
-  @tag with_fixtures: true
   test "renders page not found when id is nonexistent", %{conn: conn} do
-    conn = get conn, "/api/files/some-unknown-file.txt"
+    conn = get conn, "/api/files/1"
 
     assert conn.status == 404
   end

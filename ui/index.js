@@ -11,8 +11,8 @@ const Main = () => (
   <EnsureAuthenticated>
     <Router>
       <Files path="/ui" />
-      <File path="/ui/:fileName" />
-      <Instance path="/ui/:fileName/:instanceId" />
+      <File path="/ui/:fileId" />
+      <Instance path="/ui/:fileId/:instanceId" />
     </Router>
   </EnsureAuthenticated>
 );

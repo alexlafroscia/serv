@@ -5,6 +5,7 @@ import BreadCrumbs from '../components/breadcrumbs';
 import FileUploader from '../components/file-uploader';
 
 import fetch from '../utils/fetch';
+import fileName from '../utils/file-name';
 import formatDate from '../utils/format-date';
 
 export default class extends Component {
@@ -12,27 +13,27 @@ export default class extends Component {
     super();
 
     this.state = {
-      file: {},
-      instance: {}
+      file: undefined,
+      instance: undefined
     };
   }
 
   componentWillMount() {
-    const { fileName, instanceId } = this.props;
+    const { fileId, instanceId } = this.props;
 
-    fetch(`/api/files/${fileName}?include=instances`)
+    fetch(`/api/files/${fileId}?include=instances`)
       .then(res => res.json())
       .then(({ data, included = [] }) => {
-        const { file } = data;
-        const instance = included
-          .filter(data => data.type === 'instance')
-          .find(instance => instance.id === instanceId);
-
-        this.setState({ file, instance });
+        this.setState({
+          file: data,
+          instance: included
+            .filter(data => data.type === 'instances')
+            .find(data => data.id == instanceId)
+        });
       });
   }
 
-  render({ fileName, instanceId }, { instance }) {
+  render({ fileId }, { file, instance }) {
     return (
       <FileUploader>
         <div
@@ -43,36 +44,48 @@ export default class extends Component {
             height: '100vh'
           }}
         >
-          <BreadCrumbs>
-            <Link href="/ui">Files</Link>
-            <Link href={`/ui/${fileName}`}>{fileName}</Link>
-            {instanceId}
-          </BreadCrumbs>
-
-          {instance.attributes ? (
-            <div class="well">
-              <div class="container-fluid">
-                <div class="row">
-                  <div
-                    class="col-xs-12 col-sm-2"
-                    style={{ fontWeight: 'bold' }}
-                  >
-                    Uploaded:
-                  </div>
-                  <div class="col-xs-12 col-sm-10">
-                    {formatDate(instance.attributes['uploaded-at'])}
-                  </div>
-                </div>
-              </div>
-            </div>
+          {file && instance ? (
+            <BreadCrumbs>
+              <Link href="/ui">Files</Link>
+              <Link href={`/ui/${fileId}`}>{fileName(file)}</Link>
+              {instance.attributes.hash}
+            </BreadCrumbs>
           ) : (
             undefined
           )}
 
-          <iframe
-            style={{ flexGrow: '1', marginBottom: '1em', width: '100%' }}
-            src={`/${fileName}?${instanceId}`}
-          />
+          {file && instance ? (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                flexGrow: '1'
+              }}
+            >
+              <div class="well">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div
+                      class="col-xs-12 col-sm-2"
+                      style={{ fontWeight: 'bold' }}
+                    >
+                      Uploaded:
+                    </div>
+                    <div class="col-xs-12 col-sm-10">
+                      {formatDate(instance.attributes['created-at'])}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <iframe
+                style={{ flexGrow: '1', marginBottom: '1em', width: '100%' }}
+                src={`/${fileName(file)}?${instance.attributes.hash}`}
+              />
+            </div>
+          ) : (
+            undefined
+          )}
         </div>
       </FileUploader>
     );

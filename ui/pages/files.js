@@ -31,13 +31,14 @@ export default class extends Component {
         <div class="container">
           <BreadCrumbs>Files</BreadCrumbs>
 
-          {files.map(({ attributes }) => {
+          {files.map(file => {
+            const { attributes } = file;
             const fileName = `${attributes.name}.${attributes.extension}`;
 
             return (
               <ListItem
                 title={fileName}
-                linkHref={`/ui/${fileName}`}
+                linkHref={`/ui/${file.id}`}
                 fileHref={`/${fileName}`}
               />
             );

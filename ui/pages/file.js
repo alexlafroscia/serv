@@ -6,6 +6,7 @@ import ListItem from '../components/list-item';
 import BreadCrumbs from '../components/breadcrumbs';
 
 import fetch from '../utils/fetch';
+import fileName from '../utils/file-name';
 import formatDate from '../utils/format-date';
 
 export default class extends Component {
@@ -19,33 +20,35 @@ export default class extends Component {
   }
 
   componentWillMount() {
-    const { fileName } = this.props;
+    const { fileId } = this.props;
 
-    fetch(`/api/files/${fileName}?include=instances,tags`)
+    fetch(`/api/files/${fileId}?include=instances,tags`)
       .then(res => res.json())
       .then(({ data, included = [] }) => {
-        const { file } = data;
-        const instances = included.filter(data => data.type === 'instance');
-
-        this.setState({ file, instances });
+        this.setState({
+          file: data,
+          instances: included.filter(data => data.type === 'instances')
+        });
       });
   }
 
-  render({ fileName }, { instances }) {
+  render(_, { file, instances }) {
+    const name = fileName(file);
+
     return (
       <FileUploader>
         <div class="container">
           <BreadCrumbs>
             <Link href="/ui">Files</Link>
-            {fileName}
+            {name}
           </BreadCrumbs>
 
           {instances.map(instance => (
             <ListItem
-              title={instance.id}
-              detailText={formatDate(instance.attributes['uploaded-at'])}
-              linkHref={`/ui/${fileName}/${instance.id}`}
-              fileHref={`/${fileName}?${instance.id}`}
+              title={instance.attributes.hash}
+              detailText={formatDate(instance.attributes['created-at'])}
+              linkHref={`/ui/${file.id}/${instance.id}`}
+              fileHref={`/${name}?${instance.attributes.hash}`}
             />
           ))}
         </div>

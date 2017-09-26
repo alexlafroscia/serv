@@ -24,16 +24,15 @@ defmodule ServWeb.APIController do
   end
 
   def show(conn, params) do
-    file_name = Map.get(params, "file_name")
     included_relationships = params
                              |> Map.get("include", "")
                              |> String.split(",")
+    file_id = params |> Map.get("file_id")
 
-    file = file_name
-           |> Serv.FileManager.get_file_query
-           |> preload(:instances)
-           |> preload(:tags)
-           |> Repo.one
+    file = Serv.File
+           |> Repo.get(file_id)
+           |> Repo.preload(:instances)
+           |> Repo.preload(:tags)
 
     if file do
       render(conn, ServWeb.FileView, "show.json", %{

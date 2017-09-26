@@ -25,7 +25,7 @@ defmodule ServWeb.Router do
 
     get "/authenticated", APIController, :check_authenticated
     get "/files", APIController, :index
-    get "/files/:file_name", APIController, :show
+    get "/files/:file_id", APIController, :show
   end
 
   scope "/", ServWeb do
