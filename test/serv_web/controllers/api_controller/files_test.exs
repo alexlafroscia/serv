@@ -139,6 +139,18 @@ defmodule ServWeb.APIControllerFilesTest do
           "label" => tag.label,
           "created-at" => tag.inserted_at |> NaiveDateTime.to_iso8601,
           "updated-at" => tag.updated_at |> NaiveDateTime.to_iso8601
+        },
+        "relationships" => %{
+          "file" => %{
+            "data" => %{
+              "type" => "files", "id" => tag.file_id,
+            }
+          },
+          "instance" => %{
+            "data" => %{
+              "type" => "instances", "id" => tag.instance_id
+            }
+          }
         }
       }
     ]
@@ -193,6 +205,18 @@ defmodule ServWeb.APIControllerFilesTest do
           "label" => tag.label,
           "created-at" => tag.inserted_at |> NaiveDateTime.to_iso8601,
           "updated-at" => tag.updated_at |> NaiveDateTime.to_iso8601
+        },
+        "relationships" => %{
+          "file" => %{
+            "data" => %{
+              "type" => "files", "id" => tag.file_id,
+            }
+          },
+          "instance" => %{
+            "data" => %{
+              "type" => "instances", "id" => tag.instance_id
+            }
+          }
         }
       }
     ]

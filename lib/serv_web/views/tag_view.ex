@@ -10,6 +10,18 @@ defmodule ServWeb.TagView do
         "label": tag.label,
         "created-at": tag.inserted_at,
         "updated-at": tag.updated_at
+      },
+      relationships: %{
+        file: %{
+          data: %{
+            type: "files", id: tag.file_id
+          }
+        },
+        instance: %{
+          data: %{
+            type: "instances", id: tag.instance_id
+          }
+        }
       }
     }
   end
