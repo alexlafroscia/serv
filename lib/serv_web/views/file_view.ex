@@ -6,10 +6,10 @@ defmodule ServWeb.FileView do
     %{data: render_many(files, ServWeb.FileView, "file.json")}
   end
 
-  def render("show.json", %{file: file, instances: instances}) do
+  def render("show.json", %{file: file, instances: true}) do
     %{
       data: render_one(file, ServWeb.FileView, "file.json"),
-      included: render_many(instances, ServWeb.InstanceView, "instance.json")
+      included: render_many(file.instances, ServWeb.InstanceView, "instance.json")
     }
   end
 
@@ -18,9 +18,6 @@ defmodule ServWeb.FileView do
   end
 
   def render("file.json", %{file: file}) do
-    instances = file
-      |> Serv.File.get_instances
-
     %{
       id: Serv.File.file_name(file),
       type: "file",
@@ -29,7 +26,7 @@ defmodule ServWeb.FileView do
         extension: file.extension
       },
       relationships: %{
-        instances: ServWeb.InstanceView.render("as-relationship", %{instances: instances})
+        instances: ServWeb.InstanceView.render("as-relationship", %{instances: file.instances})
       }
     }
   end

@@ -2,19 +2,12 @@ defmodule Serv.FileManager do
   @moduledoc """
   File Management Module
   """
-  import Ecto.Query, only: [from: 2]
+  import Ecto.Query, only: [from: 2, where: 3]
 
   alias Serv.Repo
   alias Serv.FileContent
   alias Serv.FileInstance
   alias Serv.FileTag
-
-  @doc """
-  Returns a list of available file objects
-  """
-  def list do
-    Repo.all(Serv.File)
-  end
 
   @doc """
   Get a File by name
@@ -39,6 +32,13 @@ defmodule Serv.FileManager do
     end
   end
 
+  def get_file_query(file_name) when is_binary(file_name) do
+    {name, ext} = parse_filename(file_name)
+
+    Serv.File
+    |> where([file], file.name == ^name and file.extension == ^ext)
+  end
+
   @doc """
   Get a File, FileInstance and FileContent based on the file name, identifier and
   encoding
@@ -47,11 +47,9 @@ defmodule Serv.FileManager do
   turns them into the data required for the response
   """
   def get_file_content(file_name, identifier, content_encoding) do
-    {name, ext} = parse_filename(file_name)
     encoding = Atom.to_string(content_encoding)
-
-    file_query = from f in Serv.File,
-      where: f.name == ^name and f.extension == ^ext
+    file_query = file_name
+                 |> get_file_query
 
     tag_content = file_query
                   |> get_file_content_by_tag(identifier, encoding)
