@@ -22,7 +22,12 @@ export default class extends Component {
   onDragEnter(event) {
     stopEvent(event);
 
-    this.setState({ isReceiving: true });
+    this.setState({
+      isReceiving:
+        Array.from(event.dataTransfer.items).filter(
+          item => item.kind === 'file'
+        ).length > 0
+    });
   }
 
   onDragLeave(event) {
