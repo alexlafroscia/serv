@@ -6,15 +6,26 @@ defmodule ServWeb.FileView do
     %{data: render_many(files, ServWeb.FileView, "file.json")}
   end
 
-  def render("show.json", %{file: file, instances: true}) do
+  def render("show.json", %{file: file, instances: instances, tags: tags}) do
+    included =
+      if instances do
+        render_many(file.instances, ServWeb.InstanceView, "instance.json")
+      else
+        []
+      end
+
+    included =
+      if tags do
+        included
+        |> Enum.concat(render_many(file.tags, ServWeb.TagView, "tag.json"))
+      else
+        included
+      end
+
     %{
       data: render_one(file, ServWeb.FileView, "file.json"),
-      included: render_many(file.instances, ServWeb.InstanceView, "instance.json")
+      included: included
     }
-  end
-
-  def render("show.json", %{file: file}) do
-    %{data: render_one(file, ServWeb.FileView, "file.json")}
   end
 
   def render("file.json", %{file: file}) do
@@ -26,7 +37,8 @@ defmodule ServWeb.FileView do
         extension: file.extension
       },
       relationships: %{
-        instances: ServWeb.InstanceView.render("as-relationship", %{instances: file.instances})
+        instances: ServWeb.InstanceView.render("as-relationship", %{instances: file.instances}),
+        tags: ServWeb.TagView.render("as-relationship", %{tags: file.tags})
       }
     }
   end

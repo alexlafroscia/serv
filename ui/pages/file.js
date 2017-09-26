@@ -21,7 +21,7 @@ export default class extends Component {
   componentWillMount() {
     const { fileName } = this.props;
 
-    fetch(`/api/files/${fileName}?include=instances`)
+    fetch(`/api/files/${fileName}?include=instances,tags`)
       .then(res => res.json())
       .then(({ data, included = [] }) => {
         const { file } = data;

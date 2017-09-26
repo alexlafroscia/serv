@@ -18,6 +18,7 @@ defmodule ServWeb.APIController do
   def index(conn, _params) do
     files = Serv.File
             |> preload(:instances)
+            |> preload(:tags)
             |> Repo.all
     render(conn, ServWeb.FileView, "index.json", files: files)
   end
@@ -31,12 +32,14 @@ defmodule ServWeb.APIController do
     file = file_name
            |> Serv.FileManager.get_file_query
            |> preload(:instances)
+           |> preload(:tags)
            |> Repo.one
 
     if file do
       render(conn, ServWeb.FileView, "show.json", %{
         file: file,
-        instances: Enum.member?(included_relationships, "instances")
+        instances: Enum.member?(included_relationships, "instances"),
+        tags: Enum.member?(included_relationships, "tags")
       })
     else
       conn

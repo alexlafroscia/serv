@@ -55,7 +55,7 @@ defmodule Serv.DataCase do
         |> Serv.Repo.insert!
 
         # Set up the "default" tag for the file
-        %Serv.FileTag{}
+        tag = %Serv.FileTag{}
         |> Serv.FileTag.changeset(%{
           label: "default",
           file_id: file.id,
@@ -84,6 +84,7 @@ defmodule Serv.DataCase do
         |> Map.put(:s_file, file)
         |> Map.put(:instance, instance)
         |> Map.put(:instance_2, instance_2)
+        |> Map.put(:tag, tag)
       else
         tags
       end
