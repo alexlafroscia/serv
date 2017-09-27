@@ -1,7 +1,13 @@
 defmodule ServWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :serv
 
-  plug Tapper.Plug.Filter, prefixes: ["/css", "/js", "/phoenix", "/ui"]
+  plug Tapper.Plug.Filter, prefixes: [
+    "/css",
+    "/favicon.ico",
+    "/js",
+    "/phoenix",
+    "/ui"
+  ]
   plug Tapper.Plug.Trace, tapper: [
     name: "incoming request"
   ]
