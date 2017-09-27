@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
         - name: serv
-          image: gcr.io/serv-179106/serv:c8d4149b4971636d2b86333cef6dc5c0bf73b631
+          image: gcr.io/serv-179106/serv:8109acf63e2223176b708467267fca31cdf1bff4
           ports:
             - containerPort: 4000
           env:
@@ -30,6 +30,10 @@ spec:
                 secretKeyRef:
                   name: serv-admin-password
                   key: password
+        - name: zipkin
+          image: gcr.io/stackdriver-trace-docker/zipkin-collector
+          ports:
+            - containerPort: 9411
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.09
           command: ["/cloud_sql_proxy", "--dir=/cloudsql",
