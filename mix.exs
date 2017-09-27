@@ -26,7 +26,7 @@ defmodule Serv.Mixfile do
   def application do
     [
       mod: {Serv.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :tapper]
     ]
   end
 
@@ -48,6 +48,7 @@ defmodule Serv.Mixfile do
       {:poison, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
       {:ecto, "~> 2.1"},
+      {:tapper_plug, "~> 0.2"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.7", only: :test},
       {:mock, "~> 0.2.0", only: :test}
