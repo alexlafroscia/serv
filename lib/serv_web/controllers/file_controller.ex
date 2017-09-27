@@ -23,8 +23,13 @@ defmodule ServWeb.FileController do
         :original -> conn
       end
 
+    tapper_id = conn
+                |> Tapper.Plug.fetch
+                |> Tapper.start_span(name: "fetching file content from database")
+
     case Serv.FileManager.get_file_content(file_name, instance_id, format) do
       [f, i, c] ->
+        Tapper.finish_span(tapper_id)
         conn
         |> render_content(f, i, c)
       nil ->

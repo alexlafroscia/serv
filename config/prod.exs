@@ -21,6 +21,13 @@ config :serv, ServWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+# Configure logger to talk to sidecar container in k8s
+config :tapper,
+  system_id: "serv",
+  reporter: Tapper.Reporter.Zipkin
+config :tapper, Tapper.Reporter.Zipkin,
+  collector_url: "http://localhost:9411/api/v1/spans"
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
