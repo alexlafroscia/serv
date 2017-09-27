@@ -1,18 +1,15 @@
 defmodule ServWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :serv
 
-  plug Tapper.Plug.Filter, prefixes: [
-    "/css",
-    "/favicon.ico",
-    "/js",
+  @assets ~w(css fonts images js favicon.ico robots.txt)
+
+  plug Tapper.Plug.Filter, prefixes: Enum.concat(@assets, [
     "/phoenix",
     "/ui"
-  ]
-  plug Tapper.Plug.Trace, tapper: [
+  ])
+  plug Tapper.Plug.Trace, debug: true, tapper: [
     name: "incoming request"
   ]
-
-  socket "/socket", ServWeb.UserSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -20,7 +17,7 @@ defmodule ServWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/", from: :serv, gzip: false,
-    only: ~w(css fonts images js favicon.ico robots.txt)
+    only: @assets
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
