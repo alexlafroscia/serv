@@ -1,11 +1,11 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: serv-controller
+  name: expose-file-server
 spec:
   ports:
   - port: 80
     targetPort: 4000
   selector:
-    app: serv
+    app: file-server
   type: LoadBalancer

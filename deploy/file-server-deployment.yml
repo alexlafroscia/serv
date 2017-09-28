@@ -1,17 +1,18 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: serv
+  name: file-server
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
-        app: serv
+        app: file-server
     spec:
       containers:
         - name: serv
-          image: gcr.io/serv-179106/serv:8109acf63e2223176b708467267fca31cdf1bff4
+          image: gcr.io/serv-179106/serv:cfa712726df2bb6bd578b76b9c75c4c3678e4dd5
+          command: ["file_server"]
           ports:
             - containerPort: 4000
           env:

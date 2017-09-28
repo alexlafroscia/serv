@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: expose-api-server
+spec:
+  ports:
+  - port: 80
+    targetPort: 4000
+  selector:
+    app: api-server
+  type: LoadBalancer
