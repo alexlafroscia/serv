@@ -4,12 +4,22 @@ defmodule FileServer.Application do
   @moduledoc false
 
   use Application
+  require Logger
 
   def start(_type, _args) do
+    port =
+      if System.get_env("PORT") do
+        String.to_integer System.get_env("PORT")
+      else
+        4001
+      end
+
     # List all child processes to be supervised
     children = [
-      Plug.Adapters.Cowboy.child_spec(:http, FileServer.Router, [], [port: 4001])
+      Plug.Adapters.Cowboy.child_spec(:http, FileServer.Router, [], [port: port])
     ]
+
+    Logger.info "Running FileServer.Router with Cowboy using http://0.0.0.0:#{port}"
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

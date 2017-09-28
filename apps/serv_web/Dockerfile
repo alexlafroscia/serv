@@ -30,8 +30,11 @@ RUN npm install
 # Build front-end application
 RUN npm run build
 
+WORKDIR apps/serv_web/
+
 # create the digests
 RUN mix phx.digest
 
 # run phoenix in production on PORT 4000
-CMD mix phx.server
+ENTRYPOINT ["mix"]
+CMD ["phx.server"]
