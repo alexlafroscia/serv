@@ -1,0 +1,6 @@
+{
+  "skip_files": [
+    "app/serv/test/support",
+    "app/serv_web/test/support"
+  ]
+}
