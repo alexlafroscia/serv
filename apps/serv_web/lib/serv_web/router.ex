@@ -11,6 +11,9 @@ defmodule ServWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  pipeline :authenticate do
     plug ServWeb.Plug.Authenticate
   end
 
@@ -22,6 +25,7 @@ defmodule ServWeb.Router do
 
   scope "/api", ServWeb do
     pipe_through :api
+    pipe_through :authenticate
 
     get "/authenticated", APIController, :check_authenticated
     get "/files", APIController, :index
@@ -30,10 +34,13 @@ defmodule ServWeb.Router do
     patch "/tags/:tag_id/relationships/instance", APITagController, :update_instance
   end
 
+  scope "/upload", ServWeb do
+    post "/", FileController, :create
+
+    post "/", FileController, :create
+  end
+
   scope "/", ServWeb do
     get "/", UIController, :redirect_to_index
-
-    post "/upload", FileController, :create
-    get "/:file_name", FileController, :show
   end
 end

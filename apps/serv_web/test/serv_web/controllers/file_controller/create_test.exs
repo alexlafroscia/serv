@@ -14,12 +14,5 @@ defmodule ServWeb.FileControllerCreateTest do
     assert conn.state == :sent
     assert conn.status == 201
     assert conn.resp_body == ""
-
-    conn = conn
-           |> get("/" <> file_name)
-
-    assert conn.state == :sent
-    assert conn.status == 200
-    assert conn.resp_body == "foo\n"
   end
 end
