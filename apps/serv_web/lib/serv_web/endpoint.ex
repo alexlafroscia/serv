@@ -7,8 +7,8 @@ defmodule ServWeb.Endpoint do
     "/phoenix",
     "/ui"
   ])
-  plug Tapper.Plug.Trace, debug: true, tapper: [
-    name: "incoming request"
+  plug Tapper.Plug.Trace, tapper: [
+    name: "api request"
   ]
 
   # Serve at "/" the static files from "priv/static" directory.
