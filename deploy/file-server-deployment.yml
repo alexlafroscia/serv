@@ -11,8 +11,7 @@ spec:
     spec:
       containers:
         - name: serv
-          image: gcr.io/serv-179106/serv:cfa712726df2bb6bd578b76b9c75c4c3678e4dd5
-          command: ["file_server"]
+          image: gcr.io/serv-179106/file-server:4107a50ee776fa2266ce339b582ec32d99f6f198
           ports:
             - containerPort: 4000
           env:
