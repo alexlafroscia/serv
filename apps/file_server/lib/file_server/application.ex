@@ -16,7 +16,8 @@ defmodule FileServer.Application do
 
     # List all child processes to be supervised
     children = [
-      Plug.Adapters.Cowboy.child_spec(:http, FileServer.Router, [], [port: port])
+      Plug.Adapters.Cowboy.child_spec(:http, FileServer.Router, [], [port: port]),
+      FileServer.Registry
     ]
 
     Logger.info "Running FileServer.Router with Cowboy using http://0.0.0.0:#{port}"
