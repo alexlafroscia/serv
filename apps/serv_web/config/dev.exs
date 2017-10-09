@@ -15,12 +15,6 @@ config :serv_web, ServWeb.Endpoint,
     npm: ["run", "build:dev"]
   ]
 
-config :tapper,
-  system_id: "api server",
-  reporter: Tapper.Reporter.Zipkin
-config :tapper, Tapper.Reporter.Zipkin,
-  collector_url: "http://localhost:9411/api/v1/spans"
-
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

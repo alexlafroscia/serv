@@ -4,9 +4,11 @@ defmodule FileServer.Router do
   use Plug.Router
 
   plug Tapper.Plug.Filter
-  plug Tapper.Plug.Trace, tapper: [
-    name: "file request"
-  ]
+  plug Tapper.Plug.Trace,
+    debug: Application.get_env(:tapper, :debug, false),
+    tapper: [
+      name: "file-server"
+    ]
 
   plug Plug.Logger
 

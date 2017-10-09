@@ -7,9 +7,11 @@ defmodule ServWeb.Endpoint do
     "/phoenix",
     "/ui"
   ])
-  plug Tapper.Plug.Trace, tapper: [
-    name: "api request"
-  ]
+  plug Tapper.Plug.Trace,
+    debug: Application.get_env(:tapper, :debug, false),
+    tapper: [
+      name: "api-server"
+    ]
 
   # Serve at "/" the static files from "priv/static" directory.
   #

@@ -18,13 +18,6 @@ config :serv_web, ServWeb.Endpoint,
   url: [host: "example.com", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
-# Configure logger to talk to sidecar container in k8s
-config :tapper,
-  system_id: "api server",
-  reporter: Tapper.Reporter.Zipkin
-config :tapper, Tapper.Reporter.Zipkin,
-  collector_url: "http://localhost:9411/api/v1/spans"
-
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
