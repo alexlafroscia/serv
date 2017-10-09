@@ -6,7 +6,7 @@
 
 # JS Stuff
 /node_modules
-app/serv_web/priv/static/js/app.js
+apps/serv_web/priv/static/js/app.js
 
 # Generated on crash by the VM
 erl_crash.dump
