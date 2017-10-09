@@ -10,9 +10,9 @@ import Instance from './pages/instance';
 const Main = () => (
   <EnsureAuthenticated>
     <Router>
-      <Files path="/ui" />
-      <File path="/ui/:fileId" />
-      <Instance path="/ui/:fileId/:instanceId" />
+      <Files path="/" />
+      <File path="/:fileId" />
+      <Instance path="/:fileId/:instanceId" />
     </Router>
   </EnsureAuthenticated>
 );

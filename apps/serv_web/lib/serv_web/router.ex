@@ -17,12 +17,6 @@ defmodule ServWeb.Router do
     plug ServWeb.Plug.Authenticate
   end
 
-  scope "/ui", ServWeb do
-    pipe_through :browser # Use the default browser stack
-
-    get "/*path", UIController, :index
-  end
-
   scope "/api", ServWeb do
     pipe_through :api
     pipe_through :authenticate
@@ -35,12 +29,14 @@ defmodule ServWeb.Router do
   end
 
   scope "/upload", ServWeb do
-    post "/", FileController, :create
+    pipe_through :authenticate
 
     post "/", FileController, :create
   end
 
   scope "/", ServWeb do
-    get "/", UIController, :redirect_to_index
+    pipe_through :browser
+
+    get "/*path", UIController, :index
   end
 end

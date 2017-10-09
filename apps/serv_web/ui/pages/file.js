@@ -88,7 +88,7 @@ export default class extends Component {
       <FileUploader>
         <div class="container">
           <BreadCrumbs>
-            <Link href="/ui">Files</Link>
+            <Link href="/">Files</Link>
             {name}
           </BreadCrumbs>
 
@@ -97,7 +97,7 @@ export default class extends Component {
               <ListItem
                 title={instance.attributes.hash}
                 detailText={formatDate(instance.attributes['created-at'])}
-                linkHref={`/ui/${file.id}/${instance.id}`}
+                linkHref={`/${file.id}/${instance.id}`}
                 fileHref={`/${name}?${instance.attributes.hash}`}
               >
                 {tags[instance.id] ? (

@@ -46,8 +46,8 @@ export default class extends Component {
         >
           {file && instance ? (
             <BreadCrumbs>
-              <Link href="/ui">Files</Link>
-              <Link href={`/ui/${fileId}`}>{fileName(file)}</Link>
+              <Link href="/">Files</Link>
+              <Link href={`/${fileId}`}>{fileName(file)}</Link>
               {instance.attributes.hash}
             </BreadCrumbs>
           ) : (
