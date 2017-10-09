@@ -3,7 +3,6 @@ export default function wrappedFetch(url, options = {}) {
     headers: Object.assign(
       {},
       {
-        'Content-Type': 'application/json',
         'serv-password': sessionStorage.getItem('password')
       },
       options.headers

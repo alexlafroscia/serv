@@ -67,6 +67,9 @@ export default class extends Component {
 
       fetch(`/api/tags/${tag.id}/relationships/instance`, {
         method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
           data: {
             type: 'instances',
