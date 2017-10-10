@@ -18,7 +18,7 @@ defmodule FileServer.Mixfile do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger, :tapper, :serv],
+      extra_applications: [:logger, :tapper, :peerage, :serv],
       mod: {FileServer.Application, []}
     ]
   end
@@ -29,6 +29,7 @@ defmodule FileServer.Mixfile do
       {:cowboy, "~> 1.0"},
       {:plug, "~> 1.4"},
       {:tapper_plug, "~> 0.2"},
+      {:peerage, "~> 1.0.2"},
       {:serv, in_umbrella: true}
     ]
   end

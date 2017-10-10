@@ -1,20 +1,25 @@
 # ServWeb
 
-To start your Phoenix server:
+Admin UI and API server for Serv
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
-  * Install Node.js dependencies with `cd assets && npm install`
-  * Start Phoenix endpoint with `mix phx.server`
+## Installation
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+See `README.md` in project root for details on installation
 
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
+## Development
 
-## Learn more
+If you want to run the API srever in isolation (without the file server connecting to it for updates) then you can run it like a regular Phoenix app:
 
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+```bash
+cd apps/serv_web
+mix phx.server
+```
+
+However, if you want file server nodes to connect to the admin, then it should be started locally like so:
+
+```bash
+cd apps/serv_web
+elixir --name admin@127.0.0.1 -S mix phx.server
+```
+
+The file server nodes will automatically discover it and connect. The admin node uses the list of connected nodes to broadcast information such as cache invalidation queues.

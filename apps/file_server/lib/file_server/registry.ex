@@ -2,7 +2,10 @@ defmodule FileServer.Registry do
   @moduledoc """
   Stores a map from file names to their bucket
   """
+  require Logger
   use GenServer
+
+  alias FileServer.Bucket
 
   @name :file_server_registry
   @initial_state {%{}, %{}}
@@ -45,7 +48,7 @@ defmodule FileServer.Registry do
     if Map.has_key?(files, file_name) do
       {:reply, Map.fetch(files, file_name), {files, refs}}
     else
-      {:ok, bucket} = FileServer.Bucket.start_link([])
+      {:ok, bucket} = Bucket.start_link([])
       ref = Process.monitor(bucket)
       refs = Map.put(refs, ref, file_name)
       files = Map.put(files, file_name, bucket)
@@ -54,8 +57,20 @@ defmodule FileServer.Registry do
     end
   end
 
-  def handle_call({:purge}, _from, {files, refs}) do
+  def handle_call({:purge}, _from, _old_state) do
     {:reply, :ok, @initial_state}
+  end
+
+  def handle_cast({:update, file_name, label, value}, {files, _} = state) do
+    with {:ok, bucket} <- Map.fetch(files, file_name),
+         :ok <- Bucket.put(bucket, label, value)
+    do
+      Logger.info "Updated #{file_name} tag #{label} to #{value}"
+      {:noreply, state}
+    else
+      :error ->
+        {:noreply, state}
+    end
   end
 
   def handle_info({:DOWN, ref, :process, _pid, _reason}, {files, refs}) do
