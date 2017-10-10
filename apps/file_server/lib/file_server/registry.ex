@@ -10,7 +10,9 @@ defmodule FileServer.Registry do
   Starts the registry.
   """
   def start_link(opts) do
-    GenServer.start_link(__MODULE__, :ok, name: :file_server_registry)
+    GenServer.start_link(__MODULE__, :ok, Keyword.merge(
+      opts, name: :file_server_registry
+    ))
   end
 
   @doc """
