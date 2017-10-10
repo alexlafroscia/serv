@@ -4,6 +4,12 @@ defmodule FileServer.RouterTest do
 
   @opts FileServer.Router.init([])
 
+  setup do
+    on_exit fn ->
+      FileServer.Registry.purge()
+    end
+  end
+
   @tag with_fixtures: true
   test "can return the default content of a file" do
     conn = :get
@@ -19,6 +25,10 @@ defmodule FileServer.RouterTest do
     assert Plug.Conn.get_resp_header(conn, "content-type") == [
       "text/plain; charset=utf-8"
     ]
+
+    # Ensure it puts the latest value into the cache
+    {:ok, bucket} = FileServer.Registry.lookup("fixture-a.txt")
+    assert FileServer.Bucket.get(bucket, "default") == "abc"
   end
 
   @tag with_fixtures: true
@@ -49,7 +59,21 @@ defmodule FileServer.RouterTest do
   end
 
   @tag with_fixtures: true
-  test "responds with a \"not modified\" if the file has already been requested" do
+  test "responds with a \"not modified\" if the file has already been requested (without cache)" do
+    conn = :get
+           |> conn("/fixture-a.txt")
+           |> Plug.Conn.put_req_header("if-none-match", "\"abc\"")
+           |> FileServer.Router.call(@opts)
+
+    assert conn.state == :sent
+    assert conn.status == 304
+    assert conn.resp_body == ""
+  end
+
+  test "responds with a \"not modified\" if the file has already been requested (using cache)" do
+    {:ok, bucket} = FileServer.Registry.create("fixture-a.txt")
+    FileServer.Bucket.put(bucket, "default", "abc")
+
     conn = :get
            |> conn("/fixture-a.txt")
            |> Plug.Conn.put_req_header("if-none-match", "\"abc\"")
