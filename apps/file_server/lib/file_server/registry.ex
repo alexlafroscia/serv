@@ -4,6 +4,9 @@ defmodule FileServer.Registry do
   """
   use GenServer
 
+  @name :file_server_registry
+  @initial_state {%{}, %{}}
+
   ## Client API
 
   @doc """
@@ -11,46 +14,48 @@ defmodule FileServer.Registry do
   """
   def start_link(opts) do
     GenServer.start_link(__MODULE__, :ok, Keyword.merge(
-      opts, name: :file_server_registry
+      opts, name: @name
     ))
   end
 
   @doc """
   Returns `{:ok, pid}` if the bucket exists, `:error` otherwise.
   """
-  def lookup(file_name) do
-    GenServer.call(:file_server_registry, {:lookup, file_name})
-  end
+  def lookup(file_name), do: GenServer.call(@name, {:lookup, file_name})
 
   @doc """
   Ensures there is a bucket associated with the given `file_name` in `registry`.
   """
-  def create(file_name) do
-    GenServer.cast(:file_server_registry, {:create, file_name})
-  end
+  def create(file_name), do: GenServer.call(@name, {:create, file_name})
+
+  @doc """
+  Clear the state of the registry
+  """
+  def purge(), do: GenServer.call(@name, {:purge})
 
   ## Server Callbacks
 
-  def init(:ok) do
-    files = %{}
-    refs = %{}
-    {:ok, {files, refs}}
-  end
+  def init(:ok), do: {:ok, @initial_state}
 
   def handle_call({:lookup, file_name}, _from, {files, _} = state) do
     {:reply, Map.fetch(files, file_name), state}
   end
 
-  def handle_cast({:create, file_name}, {files, refs}) do
+  def handle_call({:create, file_name}, _from, {files, refs}) do
     if Map.has_key?(files, file_name) do
-      {:noreply, {files, refs}}
+      {:reply, Map.fetch(files, file_name), {files, refs}}
     else
       {:ok, bucket} = FileServer.Bucket.start_link([])
       ref = Process.monitor(bucket)
       refs = Map.put(refs, ref, file_name)
       files = Map.put(files, file_name, bucket)
-      {:noreply, {files, refs}}
+
+      {:reply, {:ok, bucket}, {files, refs}}
     end
+  end
+
+  def handle_call({:purge}, _from, {files, refs}) do
+    {:reply, :ok, @initial_state}
   end
 
   def handle_info({:DOWN, ref, :process, _pid, _reason}, {files, refs}) do
