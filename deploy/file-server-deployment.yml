@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: file-server
 spec:
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
         - name: serv
-          image: gcr.io/serv-179106/file-server:4107a50ee776fa2266ce339b582ec32d99f6f198
+          image: gcr.io/serv-179106/file-server:8282cbd6fff6230d1ec362103ce33f1fc02e173a
           ports:
             - containerPort: 4000
           env:
