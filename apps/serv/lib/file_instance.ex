@@ -38,17 +38,27 @@ defmodule Serv.FileInstance do
       file_id: file.id
     }
 
-    with {:ok, instance} <- Repo.insert(new_instance),
-         {:ok, _} <- %FileContent{}
-                                    |> FileContent.changeset(%{
-                                      type: "original",
-                                      instance_id: instance.id,
-                                      file_id: file.id,
-                                      content: file_content
-                                    })
-                                    |> Repo.insert
-    do
-      {:ok, instance}
+    try do
+      Repo.transaction fn ->
+        # Create the file instance
+        instance = Repo.insert!(new_instance)
+
+        # Insert the file content
+        %FileContent{}
+        |> FileContent.changeset(%{
+          type: "original",
+          instance_id: instance.id,
+          file_id: file.id,
+          content: file_content
+        })
+        |> Repo.insert!
+
+        instance
+      end
+    rescue
+      e in Postgrex.Error ->
+        message = Exception.message e
+        {:error, message}
     end
   end
 

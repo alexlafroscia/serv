@@ -104,9 +104,10 @@ defmodule Serv.FileManager do
   end
 
   def create_instance(file, file_content) do
-    {:ok, instance} = FileInstance.create(file, file_content)
-    ensure_default_tag file, instance
-    {:ok, instance}
+    with {:ok, instance} <- FileInstance.create(file, file_content) do
+      ensure_default_tag file, instance
+      {:ok, instance}
+    end
   end
 
   @doc """

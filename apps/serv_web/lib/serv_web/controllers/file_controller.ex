@@ -15,10 +15,10 @@ defmodule ServWeb.FileController do
         conn
         |> put_status(:created)
         |> text("")
-      {:error, _} ->
+      {:error, message} ->
         conn
         |> put_status(:bad_request)
-        |> text("")
+        |> text(message)
     end
   end
 end
