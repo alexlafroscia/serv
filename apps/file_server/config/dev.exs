@@ -1,7 +1,5 @@
 use Mix.Config
 
-config :peerage,
-  via: Peerage.Via.List,
-  node_list: [
-    :"admin@127.0.0.1"
-  ]
+config :peerage, via: Peerage.Via.Dns,
+  dns_name: "localhost",
+  app_name: "api-server"

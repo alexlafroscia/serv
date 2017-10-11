@@ -11,9 +11,11 @@ spec:
     spec:
       containers:
         - name: serv
-          image: gcr.io/serv-179106/api-server:8282cbd6fff6230d1ec362103ce33f1fc02e173a
+          image: gcr.io/serv-179106/api-server:7488e25f8c071f2844bc216acc6d8abb2c56ce49
           ports:
             - containerPort: 4000
+          command: ["elixir"]
+          args: ["--name", "api-server@$(MY_POD_IP)", "--cookie", "$(ERLANG_COOKIE)", "-S", "mix", "phx.server"]
           env:
             - name: POSTGRES_USER
               valueFrom:
@@ -30,6 +32,15 @@ spec:
                 secretKeyRef:
                   name: serv-admin-password
                   key: password
+            - name: ERLANG_COOKIE
+              valueFrom:
+                secretKeyRef:
+                  name: app-config
+                  key: erlang-cookie
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
         - name: zipkin
           image: gcr.io/stackdriver-trace-docker/zipkin-collector
           ports:

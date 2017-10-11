@@ -19,7 +19,7 @@ However, if you want file server nodes to connect to the admin, then it should b
 
 ```bash
 cd apps/serv_web
-elixir --name admin@127.0.0.1 -S mix phx.server
+elixir --name api-server@127.0.0.1 -S mix phx.server
 ```
 
 The file server nodes will automatically discover it and connect. The admin node uses the list of connected nodes to broadcast information such as cache invalidation queues.

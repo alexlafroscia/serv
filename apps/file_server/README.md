@@ -19,7 +19,7 @@ However, the node must be named if you want the admin and file server to communi
 
 ```bash
 cd apps/file_server
-elixir --sname file-server --no-halt -S mix run
+elixir --name file-server@127.0.0.1 --no-halt -S mix run
 ```
 
 In the above instance, `file-server` could be replaced with anything.

@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: epmd-api-server
+spec:
+  clusterIP: None
+  ports:
+    - port: 4369
+      targetPort: 4369
+  selector:
+    app: api-server

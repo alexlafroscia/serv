@@ -18,9 +18,9 @@ Follow the directions [here](https://cloud.google.com/sql/docs/postgres/connect-
 
 Currently a PITA. Docs TBD.
 
-### Password
+### Admin Password
 
-The Admin API assumes that a password will be set through a Kubernetes secret called `serv-admin-password` with a `password` field. You can set it through something like
+The API assumes that a password will be set through an environment variable. The `api-server` deployment sets up a pod that will read this value from a secret called `serv-admin-password` with a `password` field. You can set it through something like
 
 ```bash
 kubectl create secret generic serv-admin-password --from-literal=password=foobar
@@ -28,14 +28,30 @@ kubectl create secret generic serv-admin-password --from-literal=password=foobar
 
 where `foobar` is your password.
 
+### Erlang Cookie
+
+In order for the different Elixir applications to communicate, a cookie has to be configured that they all share. Since you can provide this as a flag at the time that the application is started, you should use a secret to configure and manage this value.  Something like this should do:
+
+```bash
+kubectl create secret generic app-config --from-literal=erlang-cookie=DCRVBIZHJWHNZXYVSFPG
+```
+
+where the value for `erlang-cookie=` should be whatever you want to make it. The value does not matter, but it should be a nice random string like the example above to prevent unexpected processes from being able to connect.
+
 ## Services
 
 Launching the services are relatively easy. There are existing config files that can be used to create the two controllers and corresponding deployments.
 
 ```bash
-kubectl create -f deploy/file-server-controller.yml
+# Allow file server nodes to find the API server
+kubectl create -f deploy/epmd-api-server.yml
+# Expose the API server with an external IP address
+kubectl create -f deploy/expose-api-server.yml
+# Expose the file server with an external IP address
+kubectl create -f deploy/expose-file-server.yml
+# Start a base file server deployment
 kubectl create -f deploy/file-server-deployment.yml
-kubectl create -f deploy/api-server-controller.yml
+# Start a base API server deployment
 kubectl create -f deploy/api-server-deployment.yml
 ```
 
