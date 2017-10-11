@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
         - name: serv
-          image: gcr.io/serv-179106/api-server:7488e25f8c071f2844bc216acc6d8abb2c56ce49
+          image: gcr.io/serv-179106/api-server:0a9bd34f11e50a2a17a4e4b7dd03764beb19b521
           ports:
             - containerPort: 4000
           command: ["elixir"]
