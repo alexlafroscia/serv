@@ -9,6 +9,13 @@
 
     <title>Serv</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <script type="text/javascript">
+      window.Serv = {
+        config: {
+          fileHost: "<%= Application.get_env(:serv_web, :file_server_host) %>"
+        }
+      };
+    </script>
   </head>
 
   <body>

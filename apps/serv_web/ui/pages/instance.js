@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import { Link } from 'preact-router/match';
 
+import config from '../config';
 import BreadCrumbs from '../components/breadcrumbs';
 import FileUploader from '../components/file-uploader';
 
@@ -80,7 +81,8 @@ export default class extends Component {
 
               <iframe
                 style={{ flexGrow: '1', marginBottom: '1em', width: '100%' }}
-                src={`/${fileName(file)}?${instance.attributes.hash}`}
+                src={`http://${config.fileHost}/${fileName(file)}?${instance
+                  .attributes.hash}`}
               />
             </div>
           ) : (

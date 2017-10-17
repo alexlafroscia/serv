@@ -8,7 +8,8 @@ use Mix.Config
 # General application configuration
 config :serv_web,
   namespace: ServWeb,
-  password: System.get_env("SERV_PASSWORD")
+  password: System.get_env("SERV_PASSWORD"),
+  file_server_host: System.get_env("FILE_SERVER_HOST") || "localhost:4001"
 
 # Configures the endpoint
 config :serv_web, ServWeb.Endpoint,

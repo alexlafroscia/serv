@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import { Link } from 'preact-router/match';
 
+import config from '../config';
 import FileUploader from '../components/file-uploader';
 import ListItem from '../components/list-item';
 import BreadCrumbs from '../components/breadcrumbs';
@@ -101,7 +102,8 @@ export default class extends Component {
                 title={instance.attributes.hash}
                 detailText={formatDate(instance.attributes['created-at'])}
                 linkHref={`/${file.id}/${instance.id}`}
-                fileHref={`/${name}?${instance.attributes.hash}`}
+                fileHref={`http://${config.fileHost}/${name}?${instance
+                  .attributes.hash}`}
               >
                 {tags[instance.id] ? (
                   <div>
