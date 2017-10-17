@@ -12,7 +12,7 @@ defmodule Serv.FileContent do
 
   schema "contents" do
     field :type, :string
-    field :content, :string
+    field :content, :binary
     field :instance_id, :id
     field :file_id, :id
 
