@@ -18,9 +18,7 @@ defmodule ServFileInstanceTest do
     content = "dummy content"
     {:ok, instance} = Serv.FileInstance.create(file, content)
 
-    assert Serv.FileInstance.get_content(instance, :gzip) == <<31,
-      139, 8, 0, 0, 0, 0, 0, 0, 19, 75, 41, 205, 205, 173, 84, 72,
-      206, 207, 43, 73, 205, 43, 1, 0, 94, 172, 81, 4, 13, 0, 0, 0>>
+    assert content == :zlib.gunzip Serv.FileInstance.get_content(instance, :gzip)
   end
 
   @tag with_fixtures: true
