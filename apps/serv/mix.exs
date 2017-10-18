@@ -20,7 +20,7 @@ defmodule Serv.Mixfile do
   def application do
     [
       mod: {Serv.Application, []},
-      extra_applications: [:logger]
+      extra_applications: [:logger, :briefly]
     ]
   end
 
@@ -33,6 +33,7 @@ defmodule Serv.Mixfile do
     [
       {:postgrex, ">= 0.0.0"},
       {:ecto, "~> 2.1"},
+      {:briefly, "~> 0.3"}
     ]
   end
 end
