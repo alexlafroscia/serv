@@ -10,7 +10,18 @@ RUN mix archive.install https://github.com/phoenixframework/archives/raw/master/
 # install node
 RUN curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh && \
     bash nodesource_setup.sh && \
-    apt-get install nodejs
+    apt-get install -y nodejs
+
+# Install Brotli
+RUN apt-get install -y cmake && \
+    cd /tmp && \
+    git clone https://github.com/google/brotli.git && \
+    cd brotli && \
+    mkdir out && \
+    cd out && \
+    ../configure-cmake && \
+    make && \
+    make install
 
 # create app folder
 RUN mkdir /app

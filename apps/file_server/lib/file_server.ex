@@ -35,6 +35,8 @@ defmodule FileServer do
       case format do
         :gzip -> conn
           |> Plug.Conn.put_resp_header("content-encoding", "gzip")
+        :brotli -> conn
+          |> Plug.Conn.put_resp_header("content-encoding", "br")
         :original -> conn
       end
 
@@ -138,11 +140,16 @@ defmodule FileServer do
         values
         |> Enum.at(0)
         |> String.split(",", trim: true)
+        |> Enum.map(fn(type) -> String.trim(type) end)
       end
 
-    case Enum.member?(values, "gzip") do
-      true -> :gzip
-      false -> :original
+    cond do
+      Enum.member?(values, "br") ->
+        :brotli
+      Enum.member?(values, "gzip") ->
+        :gzip
+      true ->
+        :original
     end
   end
 

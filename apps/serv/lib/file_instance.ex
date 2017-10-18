@@ -53,13 +53,21 @@ defmodule Serv.FileInstance do
         })
         |> Repo.insert!
 
-        gzipped_content = :zlib.gzip file_content
         %FileContent{}
         |> FileContent.changeset(%{
           type: "gzip",
           instance_id: instance.id,
           file_id: file.id,
-          content: gzipped_content
+          content: :zlib.gzip(file_content)
+        })
+        |> Repo.insert!
+
+        %FileContent{}
+        |> FileContent.changeset(%{
+          type: "brotli",
+          instance_id: instance.id,
+          file_id: file.id,
+          content: Serv.Brotli.compress(file_content)
         })
         |> Repo.insert!
 
