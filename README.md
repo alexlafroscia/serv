@@ -65,14 +65,6 @@ The back-end code can be linted through
 mix credo
 ```
 
-## Building Docker images
+## More Info
 
-Since this repository contains two different applications, that would be run independently, there are two different `Dockerfile`s. To build a particular server, you'd run something like:
-
-```sh
-docker build -f apps/file_server/Dockerfile -t file-server:latest .
-```
-
-This allows the created image to be as small as possible, as well as allowing different commands for each of them.
-
-As a shortcut, you can also execute `deploy/build` and `deploy/push` to build and push the images, respectively.
+More information about the project can be found [on the wiki](https://gitlab.com/alexlafroscia/serv/wikis/home).
