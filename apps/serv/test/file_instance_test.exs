@@ -9,14 +9,18 @@ defmodule ServFileInstanceTest do
 
     assert instance.file_id === file.id
     assert instance.hash === "90C55A38064627DCA337DFA5FC5BE120"
+
+    assert content == Serv.FileInstance.get_content(instance)
   end
 
-  @tag :skip
-  test "getting the gzipped content of a file"
-
   @tag with_fixtures: true
-  test "getting the content for a file", %{instance: instance} do
-    assert Serv.FileInstance.get_content(instance) === "foo"
+  test "getting the gzipped content of a file", %{s_file: file} do
+    content = "dummy content"
+    {:ok, instance} = Serv.FileInstance.create(file, content)
+
+    assert Serv.FileInstance.get_content(instance, :gzip) == <<31,
+      139, 8, 0, 0, 0, 0, 0, 0, 19, 75, 41, 205, 205, 173, 84, 72,
+      206, 207, 43, 73, 205, 43, 1, 0, 94, 172, 81, 4, 13, 0, 0, 0>>
   end
 
   @tag with_fixtures: true

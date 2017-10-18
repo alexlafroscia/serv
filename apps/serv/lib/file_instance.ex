@@ -53,6 +53,16 @@ defmodule Serv.FileInstance do
         })
         |> Repo.insert!
 
+        gzipped_content = :zlib.gzip file_content
+        %FileContent{}
+        |> FileContent.changeset(%{
+          type: "gzip",
+          instance_id: instance.id,
+          file_id: file.id,
+          content: gzipped_content
+        })
+        |> Repo.insert!
+
         instance
       end
     rescue
@@ -66,9 +76,14 @@ defmodule Serv.FileInstance do
   Get the contents of a file instance
   """
   def get_content(instance), do: get_content(instance, :original)
-  def get_content(instance, :original) do
+
+  def get_content(instance, type) when is_atom(type) do
+    get_content instance, Atom.to_string(type)
+  end
+
+  def get_content(instance, type) do
     file_content = Repo.get_by(FileContent, %{
-      type: "original",
+      type: type,
       file_id: instance.file_id,
       instance_id: instance.id
     })

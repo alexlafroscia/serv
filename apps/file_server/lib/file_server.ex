@@ -141,8 +141,7 @@ defmodule FileServer do
       end
 
     case Enum.member?(values, "gzip") do
-      # true -> :gzip
-      true -> :original
+      true -> :gzip
       false -> :original
     end
   end
