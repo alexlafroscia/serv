@@ -9,7 +9,8 @@ use Mix.Config
 config :serv_web,
   namespace: ServWeb,
   password: System.get_env("SERV_PASSWORD"),
-  file_server_host: System.get_env("FILE_SERVER_HOST") || "localhost:4001"
+  file_server_host: System.get_env("FILE_SERVER_HOST") || "localhost:4001",
+  brotli_path: System.get_env("BROTLI_PATH") || System.find_executable("brotli")
 
 # Configures the endpoint
 config :serv_web, ServWeb.Endpoint,

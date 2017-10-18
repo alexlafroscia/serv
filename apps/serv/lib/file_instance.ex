@@ -62,14 +62,16 @@ defmodule Serv.FileInstance do
         })
         |> Repo.insert!
 
-        %FileContent{}
-        |> FileContent.changeset(%{
-          type: "brotli",
-          instance_id: instance.id,
-          file_id: file.id,
-          content: Serv.Brotli.compress(file_content)
-        })
-        |> Repo.insert!
+        with {:ok, compressed_content} <- Serv.Brotli.compress(file_content) do
+          %FileContent{}
+          |> FileContent.changeset(%{
+            type: "brotli",
+            instance_id: instance.id,
+            file_id: file.id,
+            content: compressed_content
+          })
+          |> Repo.insert!
+        end
 
         instance
       end
