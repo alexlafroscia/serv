@@ -1,0 +1,42 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "taskName": "mix: test",
+            "type": "shell",
+            "command": "mix",
+            "args": [
+                "test"
+            ],
+            "group": "test",
+            "presentation": {
+                "panel": "dedicated",
+                "reveal": "always"
+            },
+            "problemMatcher": [
+                "$mixCompileError",
+                "$mixCompileWarning",
+                "$mixTestFailure"
+            ]
+        },
+        {
+            "taskName": "mix: compile",
+            "type": "shell",
+            "command": "mix",
+            "args": [
+                "compile"
+            ],
+            "group": "build",
+            "presentation": {
+                "panel": "dedicated",
+                "reveal": "always"
+            },
+            "problemMatcher": [
+                "$mixCompileError",
+                "$mixCompileWarning"
+            ]
+        }
+    ]
+}
